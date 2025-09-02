@@ -53,8 +53,8 @@ export default function The20hrCoPage() {
                     margin: '0.5rem 0 1rem 0',
                     transition: 'color 0.2s ease'
                   }}
-                  onMouseEnter={(e) => e.target.style.color = 'var(--mono9)'}
-                  onMouseLeave={(e) => e.target.style.color = 'var(--mono7)'}
+                  onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono9)'}
+                  onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono7)'}
                 >
                   Watch the Story
                 </button>
