@@ -70,63 +70,27 @@ export default function The20hrCoPage() {
                 />
                 
                 <p>
-                  20 hours. 20k exit. 20 years old.
+                  Looking back, this was one of the most audacious things I&apos;ve ever attempted. We were challenged by Anton Osika to build something totally unreasonable.
                 </p>
                 
                 <p>
-                  Looking back, this was one of the most audacious things we&apos;ve ever attempted. The question seemed impossible: 
-                  Could we build, launch, and sell a company in just 20 hours?
+                  I assembled my friends, and together we chose our challenge: Build, Launch, Sell, all within 20 hours. What followed was one of the greatest and most stressful experiences of my life, but I loved every second of it.
                 </p>
                 
                 <p>
-                  I assembled the best hackathon winners I knew - Charlie Cheesman, David Gelberg, Leo Camacho, and Luke Tervit. 
-                  Together, we set out to prove that Europe could do the impossible, that young founders could achieve what 
-                  seemed unreasonable if only they were ambitious enough.
+                  <a href="https://the20hr.co" rel="noopener" target="_blank">The20hr.co</a> became Europe&apos;s fastest startup exit, acquired by Revel in record time.
                 </p>
                 
                 <p>
-                  The challenge was clear: Build, Launch, Sell - all within 20 hours. 
-                  What followed was one of the greatest and most stressful experiences of my life, but I loved every second of it.
+                  It was my first time in Sweden, and also my first hackathon where I was picking up the phone, getting on calls, and selling instead of being 100% heads down in coding. As a result, we scaled to €10k in revenue from the sponsors we secured for the project.
                 </p>
                 
                 <p>
-                  We didn&apos;t just meet the challenge - we smashed it. <a href="https://the20hr.co" rel="noopener" target="_blank">The20hr.co</a> became 
-                  Europe&apos;s fastest startup exit, acquired by Revel in record time.
+                  So, what did we build? A hyper personalised LinkedIn automation outreach tool, which we also used to land Cluely a client so that they would sponsor us.
                 </p>
                 
                 <p>
-                  But this story is really about gratitude. None of this would have been possible without incredible support:
-                </p>
-                
-                <p>
-                  The organisers who created this audacious hackathon: Project Europe, 20VC, Creandum, and Lovable - 
-                  Kitty Mayo, Harry Stebbings, Filip Mark, and Anton Osika. Brian Walker, who believed in us and made the acquisition happen. 
-                  Anna Walker, who changed her birthday plans for us.
-                </p>
-                
-                <p>
-                  Eric Davison provided legal advice on &apos;this crazy idea&apos;. Ashkan Dabbagh stayed up all night video editing with us. 
-                  Marcus Grip stitched everything together at the last minute. The list goes on - Laura Normand answering 2am phone calls, 
-                  Alexa Kayman and Ben delivering the fastest Cluely UGC turnaround I&apos;ve ever seen, Katie Schlager providing incredible late-night feedback.
-                </p>
-                
-                <p>
-                  To everyone who said &quot;Sorry... you&apos;re doing what exactly?&quot; and to everyone who sent messages of support - 
-                  you backed us before anyone else would, and that means the world.
-                </p>
-                
-                <p>
-                  What we proved is that Europe can compete on the largest stage. That impossible things become possible when you&apos;re 
-                  ambitious enough and surround yourself with the right people. Our team demonstrated that together, we can do the impossible.
-                </p>
-                
-                <p>
-                  Now the question is: What will you build? Because Europe - it&apos;s time to build.
-                </p>
-                
-                <p>
-                  We can&apos;t wait to do it again. Next time, we&apos;re going to build even better, even faster. 
-                  Because things like this aren&apos;t possible... until they are.
+                  I learned a lot from this short but intense experience. It truly reinforced the idea that nothing is too audacious when you bring together the right people and give it everything you&apos;ve got.
                 </p>
               </div>
 
