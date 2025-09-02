@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import ExternalLinkIcon from "@/components/ExternalLinkIcon";
 import Footer from "@/components/Footer";
 
@@ -48,10 +49,10 @@ export default function Home() {
                 <div className="column">
                   <h2>Experience</h2>
                   <div className="item-block">
-                    <a href="https://the20hr.co" rel="noopener" target="_blank">
+                    <Link href="/the20hr-co">
                       The20hr.co
                       <ExternalLinkIcon />
-                    </a>
+                    </Link>
                     <p>Co-Founder. Built, launched & sold in 20 hours. Europe&apos;s fastest exit.</p>
                   </div>
                   <div className="item-block">
