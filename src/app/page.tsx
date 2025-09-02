@@ -34,17 +34,12 @@ export default function Home() {
                 Henry Allen
               </h1>
               <p data-animate="" style={{ "--stagger": 2 } as React.CSSProperties}>
-                <em>Building AI solutions</em>. Self-taught AI engineer with experience deploying and scaling 
-                AI across industries. Founded, scaled, and exited Europe&apos;s fastest startup in 20 hours. 
-                AI Engineer at{" "}
-                <a href="https://fiftyfiveandfive.com" rel="noopener" target="_blank">
-                  Fifty Five And Five
-                </a>.
+                <em>Building AI solutions</em>. Self-taught AI engineer turning wild ideas into scalable products, 
+                from voice systems and RAG pipelines to a 20-hour startup exit and GPU-powered avatars for 10,000+ London Marathon runners.
               </p>
               <p data-animate="" style={{ "--stagger": 3 } as React.CSSProperties}>
-                Worked directly with executives at TCS on AI integration strategies, 
-                including AI avatars for the London Marathon. Built production-ready 
-                AI solutions using full-stack development across multiple frameworks.
+                I also lead London&apos;s largest developer community, running hackathons and partnerships, 
+                and along the way I&apos;ve made enough API calls to make rate limiters cry.
               </p>
             </div>
 
@@ -91,18 +86,21 @@ export default function Home() {
                 </div>
 
                 <div className="column">
-                  <h2>Skills</h2>
+                  <h2>Other</h2>
                   <div className="item-block">
-                    <a>Full-Stack AI</a>
-                    <p>Python, TypeScript, FastAPI, OpenAI API, RAG pipelines.</p>
+                    <a href="https://www.unicrnmafia.com/" rel="noopener" target="_blank">
+                      Unicorn Mafia
+                      <ExternalLinkIcon />
+                    </a>
+                    <p>Leading London&apos;s largest developer community, organising hackathons and partnerships!</p>
                   </div>
                   <div className="item-block">
-                    <a>Cloud & DevOps</a>
-                    <p>Docker, CI/CD, GCP, AWS deployment and scaling.</p>
+                    <a>Open Water Diving License</a>
+                    <p>Certified diver exploring underwater adventures.</p>
                   </div>
                   <div className="item-block">
-                    <a>AI Tools</a>
-                    <p>LangChain, CrewAI, VAPI, Cursor, Claude Code.</p>
+                    <a>Travel & Exploration</a>
+                    <p>I like to spend my spare time travelling and exploring new places.</p>
                   </div>
                 </div>
               </div>
