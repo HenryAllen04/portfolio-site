@@ -61,14 +61,6 @@ export default function The20hrCoPage() {
               </div>
 
               <div data-animate="" style={{ "--stagger": 3 } as React.CSSProperties}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/images/LovableHackphoto.jpeg" 
-                  alt="The20hr.co team at Lovable hackathon" 
-                  className="hackathon-photo"
-                  style={{ float: "right", margin: "0 0 1rem 1.5rem", maxWidth: "300px", borderRadius: "8px" }}
-                />
-                
                 <p>
                   Looking back, this was one of the most audacious things I&apos;ve ever attempted. We were challenged by Anton Osika to build something totally unreasonable.
                 </p>
@@ -96,19 +88,66 @@ export default function The20hrCoPage() {
 
               <div id="story-section" data-animate="" style={{ "--stagger": 4 } as React.CSSProperties}>
                 <h2>The Story</h2>
-                <div className="video-container" style={{ margin: "2rem 0", textAlign: "center" }}>
-                  <iframe 
-                    src="https://drive.google.com/file/d/1lJQK-9V0qY0TzbLzzS_dzWqm9z-v_SgP/preview" 
-                    width="360" 
-                    height="640" 
-                    allow="autoplay"
-                    style={{ borderRadius: "12px", maxWidth: "100%" }}
-                    title="The20hr.co Story - Europe's Fastest Startup Exit"
-                  ></iframe>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem", margin: "2rem 0" }}>
+                  <div style={{ flex: "0 0 auto" }}>
+                    <iframe 
+                      src="https://drive.google.com/file/d/1lJQK-9V0qY0TzbLzzS_dzWqm9z-v_SgP/preview?embedded=true" 
+                      width="280" 
+                      height="500" 
+                      style={{ 
+                        borderRadius: "12px", 
+                        border: "none"
+                      }}
+                      title="The20hr.co Story - Europe's Fastest Startup Exit"
+                    ></iframe>
+                  </div>
+                  <div style={{ flex: "1", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src="/images/LovableHackphoto.jpeg" 
+                      alt="The20hr.co team at Lovable hackathon" 
+                      style={{ 
+                        width: "100%", 
+                        maxWidth: "400px",
+                        borderRadius: "8px"
+                      }}
+                    />
+                    <iframe 
+                      width="100%" 
+                      height="225" 
+                      src="https://www.youtube.com/embed/NFlOEW9kEfk?controls=0&modestbranding=1&rel=0" 
+                      title="the20hr.co" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      referrerPolicy="strict-origin-when-cross-origin" 
+                      allowFullScreen
+                      style={{ 
+                        borderRadius: "8px",
+                        maxWidth: "400px"
+                      }}
+                    ></iframe>
+                  </div>
                 </div>
-                <p style={{ textAlign: "center", fontStyle: "italic", color: "var(--mono7)" }}>
-                  The full story of how we built, launched, and sold Europe&apos;s fastest startup in 20 hours.
-                </p>
+                
+                <div data-animate="" style={{ "--stagger": 5, textAlign: "center", marginTop: "2rem" } as React.CSSProperties}>
+                  <a 
+                    href="https://the20hr.co" 
+                    rel="noopener" 
+                    target="_blank"
+                    style={{
+                      color: 'var(--mono7)',
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '16px',
+                      fontStyle: 'italic',
+                      textDecoration: 'underline',
+                      transition: 'color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono9)'}
+                    onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono7)'}
+                  >
+                    Visit the20hr.co
+                  </a>
+                </div>
               </div>
             </div>
           </article>
