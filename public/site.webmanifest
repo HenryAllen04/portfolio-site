@@ -1,0 +1,17 @@
+{
+  "name": "Henry Allen - AI Engineer & Entrepreneur",
+  "short_name": "Henry Allen",
+  "description": "Portfolio of Henry Allen - Self-taught AI engineer turning wild ideas into scalable products, from voice systems to Europe's fastest startup exit.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/halogo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

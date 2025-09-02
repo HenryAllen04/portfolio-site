@@ -26,15 +26,17 @@ export default function The20hrCoPage() {
       <div className="blur" aria-hidden="true"></div>
       <main>
         <div className="main-grid">
-          <article data-animation-controller="true">
+          <article data-animation-controller="true" itemScope itemType="https://schema.org/Article">
             <div className="prose">
-              <h1 data-animate="" style={{ "--stagger": 1 } as React.CSSProperties}>
-                The20hr.co
-              </h1>
+              <header>
+                <h1 data-animate="" style={{ "--stagger": 1 } as React.CSSProperties} itemProp="headline">
+                  The20hr.co
+                </h1>
               
-              <p data-animate="" style={{ "--stagger": 2 } as React.CSSProperties}>
-                <em>Europe&apos;s fastest startup exit</em> - Built, launched, and sold in 20 hours.
-              </p>
+                <p data-animate="" style={{ "--stagger": 2 } as React.CSSProperties} itemProp="description">
+                  <em>Europe&apos;s fastest startup exit</em> - Built, launched, and sold in 20 hours.
+                </p>
+              </header>
               
               <div data-animate="" style={{ "--stagger": 2.5 } as React.CSSProperties}>
                 <button 
@@ -55,97 +57,105 @@ export default function The20hrCoPage() {
                   }}
                   onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono9)'}
                   onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono7)'}
+                  aria-label="Scroll to watch the story video"
                 >
                   Watch the Story
                 </button>
               </div>
 
-              <div data-animate="" style={{ "--stagger": 3 } as React.CSSProperties}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/images/LovableHackphoto.jpeg" 
-                  alt="The20hr.co team at Lovable hackathon" 
-                  className="hackathon-photo"
-                  style={{ float: "right", margin: "0 0 1rem 1.5rem", maxWidth: "300px", borderRadius: "8px" }}
-                />
-                
+              <section data-animate="" style={{ "--stagger": 3 } as React.CSSProperties} itemProp="articleBody">
                 <p>
-                  20 hours. 20k exit. 20 years old.
+                  Looking back, this was one of the most audacious things I&apos;ve ever attempted. We were challenged by <a href="https://www.linkedin.com/in/antonosika/" rel="noopener" target="_blank">Anton Osika</a> to build something totally unreasonable.
                 </p>
                 
                 <p>
-                  Looking back, this was one of the most audacious things we&apos;ve ever attempted. The question seemed impossible: 
-                  Could we build, launch, and sell a company in just 20 hours?
+                  I assembled my friends, and together we chose our challenge: Build, Launch, Sell, all within 20 hours. What followed was one of the greatest and most stressful experiences of my life, but I loved every second of it.
                 </p>
                 
                 <p>
-                  I assembled the best hackathon winners I knew - Charlie Cheesman, David Gelberg, Leo Camacho, and Luke Tervit. 
-                  Together, we set out to prove that Europe could do the impossible, that young founders could achieve what 
-                  seemed unreasonable if only they were ambitious enough.
+                  <a href="https://the20hr.co" rel="noopener" target="_blank">The20hr.co</a> became Europe&apos;s fastest startup exit, acquired by Revel in record time.
                 </p>
                 
                 <p>
-                  The challenge was clear: Build, Launch, Sell - all within 20 hours. 
-                  What followed was one of the greatest and most stressful experiences of my life, but I loved every second of it.
+                  It was my first time in Sweden, and also my first hackathon where I was picking up the phone, getting on calls, and selling instead of being 100% heads down in coding. As a result, we scaled to €10k in revenue from the sponsors we secured for the project.
                 </p>
                 
                 <p>
-                  We didn&apos;t just meet the challenge - we smashed it. <a href="https://the20hr.co" rel="noopener" target="_blank">The20hr.co</a> became 
-                  Europe&apos;s fastest startup exit, acquired by Revel in record time.
+                  So, what did we build? A hyper personalised LinkedIn automation outreach tool, which we also used to land Cluely a client so that they would sponsor us.
                 </p>
                 
                 <p>
-                  But this story is really about gratitude. None of this would have been possible without incredible support:
+                  I learned a lot from this short but intense experience. It truly reinforced the idea that nothing is too audacious when you bring together the right people and give it everything you&apos;ve got.
                 </p>
-                
-                <p>
-                  The organisers who created this audacious hackathon: Project Europe, 20VC, Creandum, and Lovable - 
-                  Kitty Mayo, Harry Stebbings, Filip Mark, and Anton Osika. Brian Walker, who believed in us and made the acquisition happen. 
-                  Anna Walker, who changed her birthday plans for us.
-                </p>
-                
-                <p>
-                  Eric Davison provided legal advice on &apos;this crazy idea&apos;. Ashkan Dabbagh stayed up all night video editing with us. 
-                  Marcus Grip stitched everything together at the last minute. The list goes on - Laura Normand answering 2am phone calls, 
-                  Alexa Kayman and Ben delivering the fastest Cluely UGC turnaround I&apos;ve ever seen, Katie Schlager providing incredible late-night feedback.
-                </p>
-                
-                <p>
-                  To everyone who said &quot;Sorry... you&apos;re doing what exactly?&quot; and to everyone who sent messages of support - 
-                  you backed us before anyone else would, and that means the world.
-                </p>
-                
-                <p>
-                  What we proved is that Europe can compete on the largest stage. That impossible things become possible when you&apos;re 
-                  ambitious enough and surround yourself with the right people. Our team demonstrated that together, we can do the impossible.
-                </p>
-                
-                <p>
-                  Now the question is: What will you build? Because Europe - it&apos;s time to build.
-                </p>
-                
-                <p>
-                  We can&apos;t wait to do it again. Next time, we&apos;re going to build even better, even faster. 
-                  Because things like this aren&apos;t possible... until they are.
-                </p>
-              </div>
+              </section>
 
-              <div id="story-section" data-animate="" style={{ "--stagger": 4 } as React.CSSProperties}>
+              <section id="story-section" data-animate="" style={{ "--stagger": 4 } as React.CSSProperties}>
                 <h2>The Story</h2>
-                <div className="video-container" style={{ margin: "2rem 0", textAlign: "center" }}>
-                  <iframe 
-                    src="https://drive.google.com/file/d/1lJQK-9V0qY0TzbLzzS_dzWqm9z-v_SgP/preview" 
-                    width="360" 
-                    height="640" 
-                    allow="autoplay"
-                    style={{ borderRadius: "12px", maxWidth: "100%" }}
-                    title="The20hr.co Story - Europe's Fastest Startup Exit"
-                  ></iframe>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem", margin: "2rem 0" }}>
+                  <div style={{ flex: "0 0 auto" }}>
+                    <iframe 
+                      src="https://drive.google.com/file/d/1lJQK-9V0qY0TzbLzzS_dzWqm9z-v_SgP/preview?embedded=true" 
+                      width="280" 
+                      height="500" 
+                      style={{ 
+                        borderRadius: "12px", 
+                        border: "none"
+                      }}
+                      title="The20hr.co Story - Europe's Fastest Startup Exit"
+                    ></iframe>
+                  </div>
+                  <div style={{ flex: "1", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src="/images/LovableHackphoto.jpeg" 
+                      alt="Henry Allen and The20hr.co team with Brian Walker who made the acquisition - celebrating Europe's fastest startup exit at Lovable hackathon in Sweden" 
+                      style={{ 
+                        width: "100%", 
+                        maxWidth: "400px",
+                        borderRadius: "8px"
+                      }}
+                      itemProp="image"
+                      loading="lazy"
+                    />
+                    <iframe 
+                      width="100%" 
+                      height="225" 
+                      src="https://www.youtube.com/embed/NFlOEW9kEfk?controls=0&modestbranding=1&rel=0" 
+                      title="The20hr.co documentary - Building Europe's fastest startup exit in 20 hours" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      referrerPolicy="strict-origin-when-cross-origin" 
+                      allowFullScreen
+                      style={{ 
+                        borderRadius: "8px",
+                        maxWidth: "400px"
+                      }}
+                      loading="lazy"
+                    ></iframe>
+                  </div>
                 </div>
-                <p style={{ textAlign: "center", fontStyle: "italic", color: "var(--mono7)" }}>
-                  The full story of how we built, launched, and sold Europe&apos;s fastest startup in 20 hours.
-                </p>
-              </div>
+                
+                <footer data-animate="" style={{ "--stagger": 5, textAlign: "center", marginTop: "2rem" } as React.CSSProperties}>
+                  <a 
+                    href="https://the20hr.co" 
+                    rel="noopener" 
+                    target="_blank"
+                    style={{
+                      color: 'var(--mono7)',
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '16px',
+                      fontStyle: 'italic',
+                      textDecoration: 'underline',
+                      transition: 'color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono9)'}
+                    onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono7)'}
+                    aria-label="Visit the20hr.co official website"
+                  >
+                    Visit the20hr.co
+                  </a>
+                </footer>
+              </section>
             </div>
           </article>
         </div>
