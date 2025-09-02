@@ -500,3 +500,36 @@ footer .footer-right {
   height: var(--gap);
   display: block;
 }
+
+/* Back Navigation Overlay */
+.back-navigation-overlay {
+  position: fixed;
+  top: 32px;
+  left: 32px;
+  z-index: 100;
+  animation: fade-in 0.6s ease-out;
+  animation-delay: calc(var(--stagger, 0) * 0.1s);
+  animation-fill-mode: both;
+}
+
+.back-navigation-overlay .back-link {
+  color: var(--mono7);
+  text-decoration: none;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 400;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+.back-navigation-overlay .back-link:hover {
+  color: var(--mono9);
+}
+
+@media (max-width: 768px) {
+  .back-navigation-overlay {
+    top: 16px;
+    left: 16px;
+  }
+}
