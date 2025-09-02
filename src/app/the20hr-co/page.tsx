@@ -26,15 +26,17 @@ export default function The20hrCoPage() {
       <div className="blur" aria-hidden="true"></div>
       <main>
         <div className="main-grid">
-          <article data-animation-controller="true">
+          <article data-animation-controller="true" itemScope itemType="https://schema.org/Article">
             <div className="prose">
-              <h1 data-animate="" style={{ "--stagger": 1 } as React.CSSProperties}>
-                The20hr.co
-              </h1>
+              <header>
+                <h1 data-animate="" style={{ "--stagger": 1 } as React.CSSProperties} itemProp="headline">
+                  The20hr.co
+                </h1>
               
-              <p data-animate="" style={{ "--stagger": 2 } as React.CSSProperties}>
-                <em>Europe&apos;s fastest startup exit</em> - Built, launched, and sold in 20 hours.
-              </p>
+                <p data-animate="" style={{ "--stagger": 2 } as React.CSSProperties} itemProp="description">
+                  <em>Europe&apos;s fastest startup exit</em> - Built, launched, and sold in 20 hours.
+                </p>
+              </header>
               
               <div data-animate="" style={{ "--stagger": 2.5 } as React.CSSProperties}>
                 <button 
@@ -55,14 +57,15 @@ export default function The20hrCoPage() {
                   }}
                   onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono9)'}
                   onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = 'var(--mono7)'}
+                  aria-label="Scroll to watch the story video"
                 >
                   Watch the Story
                 </button>
               </div>
 
-              <div data-animate="" style={{ "--stagger": 3 } as React.CSSProperties}>
+              <section data-animate="" style={{ "--stagger": 3 } as React.CSSProperties} itemProp="articleBody">
                 <p>
-                  Looking back, this was one of the most audacious things I&apos;ve ever attempted. We were challenged by Anton Osika to build something totally unreasonable.
+                  Looking back, this was one of the most audacious things I&apos;ve ever attempted. We were challenged by <a href="https://www.linkedin.com/in/antonosika/" rel="noopener" target="_blank">Anton Osika</a> to build something totally unreasonable.
                 </p>
                 
                 <p>
@@ -84,9 +87,9 @@ export default function The20hrCoPage() {
                 <p>
                   I learned a lot from this short but intense experience. It truly reinforced the idea that nothing is too audacious when you bring together the right people and give it everything you&apos;ve got.
                 </p>
-              </div>
+              </section>
 
-              <div id="story-section" data-animate="" style={{ "--stagger": 4 } as React.CSSProperties}>
+              <section id="story-section" data-animate="" style={{ "--stagger": 4 } as React.CSSProperties}>
                 <h2>The Story</h2>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem", margin: "2rem 0" }}>
                   <div style={{ flex: "0 0 auto" }}>
@@ -105,18 +108,20 @@ export default function The20hrCoPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src="/images/LovableHackphoto.jpeg" 
-                      alt="The20hr.co team at Lovable hackathon" 
+                      alt="Henry Allen and The20hr.co team with Brian Walker who made the acquisition - celebrating Europe's fastest startup exit at Lovable hackathon in Sweden" 
                       style={{ 
                         width: "100%", 
                         maxWidth: "400px",
                         borderRadius: "8px"
                       }}
+                      itemProp="image"
+                      loading="lazy"
                     />
                     <iframe 
                       width="100%" 
                       height="225" 
                       src="https://www.youtube.com/embed/NFlOEW9kEfk?controls=0&modestbranding=1&rel=0" 
-                      title="the20hr.co" 
+                      title="The20hr.co documentary - Building Europe's fastest startup exit in 20 hours" 
                       frameBorder="0" 
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                       referrerPolicy="strict-origin-when-cross-origin" 
@@ -125,11 +130,12 @@ export default function The20hrCoPage() {
                         borderRadius: "8px",
                         maxWidth: "400px"
                       }}
+                      loading="lazy"
                     ></iframe>
                   </div>
                 </div>
                 
-                <div data-animate="" style={{ "--stagger": 5, textAlign: "center", marginTop: "2rem" } as React.CSSProperties}>
+                <footer data-animate="" style={{ "--stagger": 5, textAlign: "center", marginTop: "2rem" } as React.CSSProperties}>
                   <a 
                     href="https://the20hr.co" 
                     rel="noopener" 
@@ -144,11 +150,12 @@ export default function The20hrCoPage() {
                     }}
                     onMouseEnter={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono9)'}
                     onMouseLeave={(e) => (e.target as HTMLAnchorElement).style.color = 'var(--mono7)'}
+                    aria-label="Visit the20hr.co official website"
                   >
                     Visit the20hr.co
                   </a>
-                </div>
-              </div>
+                </footer>
+              </section>
             </div>
           </article>
         </div>
