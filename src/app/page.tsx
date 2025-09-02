@@ -86,18 +86,21 @@ export default function Home() {
                 </div>
 
                 <div className="column">
-                  <h2>Skills</h2>
+                  <h2>Other</h2>
                   <div className="item-block">
-                    <a>Full-Stack AI</a>
-                    <p>Python, TypeScript, FastAPI, OpenAI API, RAG pipelines.</p>
+                    <a href="https://www.unicrnmafia.com/" rel="noopener" target="_blank">
+                      Unicorn Mafia
+                      <ExternalLinkIcon />
+                    </a>
+                    <p>Leading London&apos;s largest developer community, organising hackathons and partnerships!</p>
                   </div>
                   <div className="item-block">
-                    <a>Cloud & DevOps</a>
-                    <p>Docker, CI/CD, GCP, AWS deployment and scaling.</p>
+                    <a>Open Water Diving License</a>
+                    <p>Certified diver exploring underwater adventures.</p>
                   </div>
                   <div className="item-block">
-                    <a>AI Tools</a>
-                    <p>LangChain, CrewAI, VAPI, Cursor, Claude Code.</p>
+                    <a>Travel & Exploration</a>
+                    <p>I like to spend my spare time travelling and exploring new places.</p>
                   </div>
                 </div>
               </div>
