@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Script from "next/script";
 import Footer from "@/components/Footer";
 import BackNavigation from "@/components/BackNavigation";
 
@@ -23,6 +22,30 @@ export default function BookPage() {
       const stagger = htmlElement.getAttribute('style')?.match(/--stagger:(\d+)/)?.[1] || index;
       htmlElement.style.setProperty('--stagger', stagger.toString());
     });
+
+    // Initialize SavvyCal
+    window.SavvyCal = window.SavvyCal || function(...args: unknown[]) {
+      (window.SavvyCal.q = window.SavvyCal.q || []).push(args);
+    };
+
+    // Load SavvyCal embed script
+    const script = document.createElement('script');
+    script.src = 'https://embed.savvycal.com/v1/embed.js';
+    script.async = true;
+    script.onload = () => {
+      if (window.SavvyCal) {
+        window.SavvyCal('init');
+        window.SavvyCal('inline', { link: 'henryallen/chat-with-henry', selector: '#booking-page' });
+      }
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   return (
@@ -44,13 +67,19 @@ export default function BookPage() {
 
               <div 
                 data-animate="" 
-                style={{ "--stagger": 3 } as React.CSSProperties}
+                style={{ 
+                  "--stagger": 3,
+                  marginTop: "2rem",
+                  marginBottom: "4rem"
+                } as React.CSSProperties}
               >
                 <div 
                   id="booking-page" 
                   style={{ 
-                    minHeight: "600px",
-                    width: "100%"
+                    minHeight: "1200px",
+                    height: "auto",
+                    width: "100%",
+                    maxWidth: "100%"
                   }}
                 >
                   {/* SavvyCal embed will be injected here */}
@@ -61,30 +90,6 @@ export default function BookPage() {
         </div>
       </main>
       <Footer />
-
-      {/* Load SavvyCal scripts */}
-      <Script
-        id="savvycal-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.SavvyCal=window.SavvyCal||function(){(SavvyCal.q=SavvyCal.q||[]).push(arguments)};
-          `
-        }}
-      />
-      <Script
-        src="https://embed.savvycal.com/v1/embed.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          if (window.SavvyCal) {
-            window.SavvyCal('init');
-            window.SavvyCal('inline', { 
-              link: 'henryallen/book', 
-              selector: '#booking-page' 
-            });
-          }
-        }}
-      />
     </>
   );
 }
