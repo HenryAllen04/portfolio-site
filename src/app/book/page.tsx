@@ -7,7 +7,10 @@ import BackNavigation from "@/components/BackNavigation";
 
 declare global {
   interface Window {
-    SavvyCal: any;
+    SavvyCal: {
+      (action: string, ...args: unknown[]): void;
+      q?: unknown[];
+    };
   }
 }
 
