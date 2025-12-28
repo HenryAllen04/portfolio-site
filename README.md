@@ -1,6 +1,6 @@
 # Henry's Portfolio
 
-A modern portfolio website built with Next.js, Tailwind CSS, and shadcn/ui.
+A modern portfolio of Henry Allens website built with Next.js, Tailwind CSS, and shadcn/ui.
 
 ## Tech Stack
 
