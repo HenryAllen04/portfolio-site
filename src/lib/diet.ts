@@ -1,44 +1,69 @@
 /**
- * Information diet — what goes in, grouped by theme. Each theme can open
- * with a quote, then lists the things worth their place.
+ * Information diet — a heading with sections inside it. Books are listed
+ * by year (title + author, note revealed on hover); other sections are
+ * simple lists. Sections also drive the sidebar drill-down.
  * NOTE: entries marked "Placeholder" are for Henry to replace.
  */
 
-export interface DietQuote {
-  text: string;
-  attribution: string;
-}
-
-export interface DietEntry {
+export interface DietItem {
   title: string;
   /** Author, host, or source. */
   by?: string;
-  /** One-line takeaway — why it earned its place. */
+  /** Optional note — revealed on hover (always visible on touch). */
   note?: string;
   href?: string;
+  /** Year consumed — used by sections that group by year (books). */
+  year?: number;
 }
 
-export interface DietTheme {
-  theme: string;
-  quote?: DietQuote;
-  entries: DietEntry[];
+export interface DietSection {
+  id: string;
+  title: string;
+  /** Optional one-liner under the section heading. */
+  blurb?: string;
+  groupByYear?: boolean;
+  items: DietItem[];
 }
 
-export const dietThemes: DietTheme[] = [
+export const dietIntro =
+  "You are what you consume. Everything I take in ends up in my LLM wiki — a personal knowledge base of what I've read, heard, and learned.";
+
+export const dietSections: DietSection[] = [
   {
-    theme: "History",
-    quote: {
-      text: "Those who cannot remember the past are condemned to repeat it.",
-      attribution: "George Santayana",
-    },
-    entries: [
+    id: "diet-books",
+    title: "Books",
+    groupByYear: true,
+    items: [
       {
         title: "The Lessons of History",
         by: "Will & Ariel Durant",
-        note: "Placeholder — swap in your two history books.",
+        year: 2026,
+        note: "Placeholder — swap in your real books and notes.",
       },
       {
-        title: "Founders Podcast",
+        title: "Influence",
+        by: "Robert Cialdini",
+        year: 2025,
+        note: "Placeholder — the mechanics of persuasion.",
+      },
+      {
+        title: "Thinking, Fast and Slow",
+        by: "Daniel Kahneman",
+        year: 2024,
+      },
+      {
+        title: "Sapiens",
+        by: "Yuval Noah Harari",
+        year: 2023,
+      },
+    ],
+  },
+  {
+    id: "diet-podcasts",
+    title: "Podcasts",
+    items: [
+      {
+        title: "Founders",
         by: "David Senra",
         note: "Placeholder — biographies of history's greatest entrepreneurs.",
         href: "https://www.founderspodcast.com/",
@@ -46,17 +71,14 @@ export const dietThemes: DietTheme[] = [
     ],
   },
   {
-    theme: "Psychology",
-    entries: [
+    id: "diet-design-courses",
+    title: "Design Courses",
+    items: [
       {
-        title: "Influence",
-        by: "Robert Cialdini",
-        note: "Placeholder — the mechanics of persuasion.",
-      },
-      {
-        title: "Thinking, Fast and Slow",
-        by: "Daniel Kahneman",
-        note: "Placeholder — how judgement actually works.",
+        title: "Animations on the Web",
+        by: "Emil Kowalski",
+        note: "Placeholder — add the design courses you rate.",
+        href: "https://animations.dev/",
       },
     ],
   },

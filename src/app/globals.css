@@ -629,8 +629,17 @@ footer .footer-right {
   background: var(--mono6);
 }
 
+.sb-rail-tick.is-near {
+  width: 11px;
+  background: var(--mono5);
+}
+
+.sb-rail-tick.is-stop.is-near {
+  width: 16px;
+}
+
 .sb-rail-tick.is-active {
-  width: 18px;
+  width: 22px;
   height: 2px;
   border-radius: 1px;
   background: var(--accent);
@@ -728,6 +737,50 @@ footer .footer-right {
   width: 10px;
   height: 1px;
   background: var(--mono4);
+  transition: width var(--transition), background var(--transition);
+}
+
+/* Ruler falloff: ticks adjacent to the indicator lean toward it */
+.sb-tick-dash.is-near {
+  width: 14px;
+  background: var(--mono6);
+}
+
+/* Sidebar drill-down: children of the active piece */
+.sb-subitems {
+  list-style: none;
+  margin: 0;
+  padding: 2px 0 6px 34px;
+}
+
+.sb-subitem {
+  display: block;
+  padding: 7px 8px;
+  font-size: 13px;
+  color: var(--mono9);
+  transition: color var(--transition);
+}
+
+.sb-subitem:hover {
+  color: var(--fg);
+  opacity: 1;
+}
+
+.sb-subitem.is-active {
+  color: var(--fg);
+  position: relative;
+}
+
+.sb-subitem.is-active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 .sb-active-bar {
@@ -1377,42 +1430,39 @@ footer .footer-right {
 }
 
 /* ─── Information diet ── */
-.diet-theme {
-  margin-top: 40px;
+.diet-group {
+  margin-top: 56px;
+  scroll-margin-top: 96px;
 }
 
-.diet-theme h3 {
-  font-size: 11px;
+.diet-group h3 {
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--mono9);
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   font-family: var(--font-ui);
 }
 
-.diet-quote {
-  padding: 8px 0 24px;
+.diet-blurb {
+  font-size: 14px;
+  color: var(--mono9);
+  margin: -8px 0 20px;
 }
 
-.diet-quote blockquote {
-  font-family: var(--font-essay);
-  font-size: 22px;
-  font-style: italic;
-  line-height: 1.45;
+.diet-year-group {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.diet-year {
+  font-size: 13px;
   color: var(--mono8);
-  margin: 0;
-  text-wrap: balance;
-}
-
-.diet-quote cite {
-  display: block;
-  margin-top: 12px;
-  font-size: 10px;
-  font-style: normal;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--mono7);
+  font-variant-numeric: tabular-nums;
+  padding-top: 8px;
 }
 
 .diet-list {
@@ -1422,23 +1472,59 @@ footer .footer-right {
 }
 
 .diet-item {
-  padding: 10px 0;
+  padding: 7px 0;
+}
+
+.diet-item-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
 .diet-item-title {
-  font-size: 15px;
+  font-family: var(--font-essay);
+  font-size: 17px;
   color: var(--fg);
 }
 
 .diet-item-by {
+  font-size: 13px;
   color: var(--mono8);
+  white-space: nowrap;
 }
 
+/* Notes hide behind hover/focus on pointer devices, stay visible on touch */
 .diet-item-note {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--mono9);
   margin-top: 2px;
+  max-width: 60ch;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .diet-item.has-note .diet-item-note {
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity var(--transition), transform var(--transition);
+  }
+
+  .diet-item.has-note:hover .diet-item-note,
+  .diet-item.has-note:focus-within .diet-item-note {
+    opacity: 1;
+    transform: none;
+  }
+
+  .diet-item.has-note .diet-item-title {
+    cursor: default;
+  }
+}
+
+@media (max-width: 640px) {
+  .diet-year-group {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 @media (max-width: 768px) {

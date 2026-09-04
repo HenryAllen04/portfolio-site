@@ -8,7 +8,7 @@ import {
   ScrollFade,
 } from "@/components/reveal/Reveal";
 import { writings } from "@/lib/writings";
-import { dietThemes } from "@/lib/diet";
+import { dietSections } from "@/lib/diet";
 
 const LINKS = [
   { label: "LinkedIn", href: "https://linkedin.com/in/henryallen" },
@@ -22,6 +22,35 @@ function formatDate(iso: string) {
     month: "short",
     year: "numeric",
   });
+}
+
+function DietRow({
+  item,
+}: {
+  item: { title: string; by?: string; note?: string; href?: string };
+}) {
+  return (
+    <li className={item.note ? "diet-item has-note" : "diet-item"}>
+      <span className="diet-item-line" tabIndex={item.note ? 0 : undefined}>
+        <span className="diet-item-title">
+          {item.href ? (
+            <a
+              href={item.href}
+              rel="noopener"
+              target="_blank"
+              className="link-reveal"
+            >
+              {item.title}
+            </a>
+          ) : (
+            item.title
+          )}
+        </span>
+        {item.by && <span className="diet-item-by">{item.by}</span>}
+      </span>
+      {item.note && <p className="diet-item-note">{item.note}</p>}
+    </li>
+  );
 }
 
 export default function Home() {
@@ -95,53 +124,47 @@ export default function Home() {
           </ScrollFade>
           <ScrollFade>
             <p className="op-lede">
-              <em>You are what you consume.</em> What currently goes in.
+              {/* TODO(henry): link the LLM wiki if/when it's public */}
+              <em>You are what you consume.</em> Everything I take in ends up
+              in my LLM wiki — a personal knowledge base of what I&apos;ve
+              read, heard, and learned.
             </p>
           </ScrollFade>
 
-          {dietThemes.map((group) => (
-            <div key={group.theme} className="diet-theme">
+          {dietSections.map((section) => (
+            <div key={section.id} id={section.id} className="diet-group">
               <ScrollFade>
-                <h3>{group.theme}</h3>
+                <h3>{section.title}</h3>
+                {section.blurb && (
+                  <p className="diet-blurb">{section.blurb}</p>
+                )}
               </ScrollFade>
-              {group.quote && (
-                <div className="diet-quote">
-                  <ScrollFade>
-                    <blockquote>{group.quote.text}</blockquote>
-                  </ScrollFade>
-                  <ScrollFade delay={100}>
-                    <cite>{group.quote.attribution}</cite>
-                  </ScrollFade>
-                </div>
+              {section.groupByYear ? (
+                [...new Set(section.items.map((b) => b.year))]
+                  .sort((a, b) => (b ?? 0) - (a ?? 0))
+                  .map((year) => (
+                    <ScrollFade key={year} threshold={0.1}>
+                      <div className="diet-year-group">
+                        <span className="diet-year">{year}</span>
+                        <ul className="diet-list">
+                          {section.items
+                            .filter((b) => b.year === year)
+                            .map((item) => (
+                              <DietRow key={item.title} item={item} />
+                            ))}
+                        </ul>
+                      </div>
+                    </ScrollFade>
+                  ))
+              ) : (
+                <ScrollFade threshold={0.1}>
+                  <ul className="diet-list">
+                    {section.items.map((item) => (
+                      <DietRow key={item.title} item={item} />
+                    ))}
+                  </ul>
+                </ScrollFade>
               )}
-              <ul className="diet-list">
-                {group.entries.map((entry, i) => (
-                  <ScrollFade key={entry.title} delay={i * 80}>
-                    <li className="diet-item">
-                      <span className="diet-item-title">
-                        {entry.href ? (
-                          <a
-                            href={entry.href}
-                            rel="noopener"
-                            target="_blank"
-                            className="link-reveal"
-                          >
-                            {entry.title}
-                          </a>
-                        ) : (
-                          entry.title
-                        )}
-                        {entry.by && (
-                          <span className="diet-item-by"> — {entry.by}</span>
-                        )}
-                      </span>
-                      {entry.note && (
-                        <p className="diet-item-note">{entry.note}</p>
-                      )}
-                    </li>
-                  </ScrollFade>
-                ))}
-              </ul>
             </div>
           ))}
         </section>

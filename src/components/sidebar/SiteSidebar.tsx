@@ -7,14 +7,18 @@
  * dismisses it; navigating between pieces keeps it open.
  *
  * The dial: Me / Writings / Information Diet with tick marks between
- * them. Scroll progress on the one-page home moves the orange indicator
- * through the ticks, so it travels rather than hopping section to section.
+ * them. Scroll progress moves the orange indicator through the ticks.
+ * The active piece unfolds its children (essays under Writings, sections
+ * under Information Diet) — the drill-down.
  */
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { SidebarToggleIcon } from "./SidebarToggleIcon";
+import { writings } from "@/lib/writings";
+import { dietSections } from "@/lib/diet";
 import {
   Sidebar,
   SidebarContent,
@@ -41,6 +45,41 @@ function EffectsToggle() {
       <span className={enabled ? "sb-effects-dot is-on" : "sb-effects-dot"} />
       Effects {enabled ? "on" : "off"}
     </button>
+  );
+}
+
+/** Children that unfold beneath the active dial stop. */
+function SubItems({
+  items,
+}: {
+  items: { label: string; href: string; isActive?: boolean; onClick?: React.MouseEventHandler<HTMLAnchorElement> }[];
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: "auto", opacity: 1 }}
+        exit={{ height: 0, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        style={{ overflow: "hidden" }}
+      >
+        <ul className="sb-subitems">
+          {items.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                onClick={item.onClick}
+                className={
+                  item.isActive ? "sb-subitem is-active" : "sb-subitem"
+                }
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
@@ -73,7 +112,10 @@ export default function SiteSidebar() {
   useEffect(() => {
     if (pathname !== "/") return;
     const onScroll = () => {
-      const line = window.innerHeight * 0.35;
+      // Just below where sections land after a dial click
+      // (scroll-margin-top: 96px), so arriving at a section lights its
+      // labelled stop exactly
+      const line = 120;
       const tops = SECTIONS.map(
         ({ id }) =>
           document.getElementById(id)?.getBoundingClientRect().top ?? Infinity,
@@ -94,13 +136,65 @@ export default function SiteSidebar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
-  const activeStop = pathname.startsWith("/writing")
+  // Hash links don't re-fire when the hash is unchanged — scroll manually
+  // so a dial click always answers, then keep the URL in sync.
+  const goTo = useCallback(
+    (id: string): React.MouseEventHandler<HTMLAnchorElement> =>
+      (e) => {
+        if (pathname !== "/") return; // real navigation to /#id
+        e.preventDefault();
+        document
+          .getElementById(id)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", `/#${id}`);
+      },
+    [pathname],
+  );
+
+  const onEssayPage = pathname.startsWith("/writing");
+  const activeStop = onEssayPage
     ? 1 * STOPS_PER_GAP
     : pathname === "/"
       ? Math.round(progress * STOPS_PER_GAP)
       : -1;
+  // Which piece you're inside (you stay "in" a section until the next
+  // one's top crosses the line) — drives the drill-down
+  const activeMain = onEssayPage
+    ? 1
+    : pathname === "/"
+      ? Math.floor(progress + 0.001)
+      : -1;
 
   const totalStops = (SECTIONS.length - 1) * STOPS_PER_GAP + 1;
+
+  /** Distance-based emphasis so the dial reads like a ruler. */
+  const tickClass = (stop: number, base: string) => {
+    const d = Math.abs(stop - activeStop);
+    return (
+      base +
+      (d === 0 ? " is-active" : d === 1 ? " is-near" : "")
+    );
+  };
+
+  const subItemsFor = (main: number) => {
+    if (main === 1) {
+      return [...writings]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map((w) => ({
+          label: w.title,
+          href: `/writing/${w.slug}`,
+          isActive: pathname === `/writing/${w.slug}`,
+        }));
+    }
+    if (main === 2) {
+      return dietSections.map((s) => ({
+        label: s.title,
+        href: `/#${s.id}`,
+        onClick: goTo(s.id),
+      }));
+    }
+    return [];
+  };
 
   return (
     <>
@@ -134,11 +228,10 @@ export default function SiteSidebar() {
           {Array.from({ length: totalStops }).map((_, s) => (
             <span
               key={s}
-              className={
-                "sb-rail-tick" +
-                (s % STOPS_PER_GAP === 0 ? " is-stop" : "") +
-                (s === activeStop ? " is-active" : "")
-              }
+              className={tickClass(
+                s,
+                "sb-rail-tick" + (s % STOPS_PER_GAP === 0 ? " is-stop" : ""),
+              )}
             />
           ))}
         </button>
@@ -147,36 +240,43 @@ export default function SiteSidebar() {
       <Sidebar defaultWidth={260} className={open ? "is-open" : undefined}>
         <SidebarContent>
           <SidebarSection>
-            {SECTIONS.map(({ id, label }, i) => (
-              <Fragment key={id}>
-                <SidebarItem
-                  href={`/#${id}`}
-                  label={label}
-                  isActive={activeStop === i * STOPS_PER_GAP}
-                />
-                {i < SECTIONS.length - 1 &&
-                  Array.from({ length: TICKS_PER_GAP }).map((_, t) => {
-                    const stop = i * STOPS_PER_GAP + t + 1;
-                    return (
-                      <div className="sb-tick" key={t} aria-hidden="true">
-                        {activeStop === stop && (
-                          <motion.span
-                            layoutId="sb-active-bar"
-                            className="sb-active-bar"
-                            animate={{ width: 16 }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 800,
-                              damping: 40,
-                            }}
-                          />
-                        )}
-                        <span className="sb-tick-dash" />
-                      </div>
-                    );
-                  })}
-              </Fragment>
-            ))}
+            {SECTIONS.map(({ id, label }, i) => {
+              const subItems = subItemsFor(i);
+              return (
+                <Fragment key={id}>
+                  <SidebarItem
+                    href={`/#${id}`}
+                    label={label}
+                    isActive={activeStop === i * STOPS_PER_GAP}
+                    onClick={goTo(id)}
+                  />
+                  {activeMain === i && subItems.length > 0 && (
+                    <SubItems items={subItems} />
+                  )}
+                  {i < SECTIONS.length - 1 &&
+                    Array.from({ length: TICKS_PER_GAP }).map((_, t) => {
+                      const stop = i * STOPS_PER_GAP + t + 1;
+                      return (
+                        <div className="sb-tick" key={t} aria-hidden="true">
+                          {activeStop === stop && (
+                            <motion.span
+                              layoutId="sb-active-bar"
+                              className="sb-active-bar"
+                              animate={{ width: 20 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 800,
+                                damping: 40,
+                              }}
+                            />
+                          )}
+                          <span className={tickClass(stop, "sb-tick-dash")} />
+                        </div>
+                      );
+                    })}
+                </Fragment>
+              );
+            })}
           </SidebarSection>
         </SidebarContent>
 

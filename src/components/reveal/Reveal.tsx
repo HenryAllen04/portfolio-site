@@ -186,9 +186,11 @@ export function ScrollFade({
   children,
   className,
   duration = INTRO.duration,
-  offsetY = INTRO.offsetY,
+  offsetY = 10,
   delay = 0,
-  threshold = 0.3,
+  // Low threshold: content resolves before the reader reaches it, so
+  // nothing is mid-fade while being read
+  threshold = 0.15,
 }: {
   children: React.ReactNode;
   className?: string;
