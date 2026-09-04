@@ -1,7 +1,16 @@
 import type { Metadata, Viewport } from "next";
+import { Newsreader } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SiteSidebar from "@/components/sidebar/SiteSidebar";
 import "./globals.css";
+
+// Full variable Newsreader (weight + italic + optical size) for essays —
+// the local woff2 subset stays as the fallback for instant first paint.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+});
 
 export const metadata: Metadata = {
   title: "Henry Allen - AI Engineer",
@@ -41,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={newsreader.variable}>
       <head>
         <link rel="icon" href="/halogo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/halogo.svg" />

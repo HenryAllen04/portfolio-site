@@ -1,19 +1,19 @@
 "use client";
 
 /**
- * Purpose: Site navigation sidebar. Wraps the ported unlumen sidebar-001
- * component with Henry's nav structure, and handles the mobile slide-in.
+ * Purpose: Site navigation sidebar — three pieces: Me, Writings,
+ * Information Diet. Wraps the ported unlumen sidebar-001 component and
+ * handles the mobile slide-in.
  */
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, FolderGit2, AtSign, PanelLeft, X } from "lucide-react";
+import { PanelLeft, X } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarItem,
   SidebarSection,
@@ -59,7 +59,7 @@ export default function SiteSidebar() {
       )}
 
       <Sidebar
-        defaultWidth={240}
+        defaultWidth={220}
         className={mobileOpen ? "is-mobile-open" : undefined}
       >
         <SidebarHeader>
@@ -72,71 +72,17 @@ export default function SiteSidebar() {
 
         <SidebarContent>
           <SidebarSection>
-            <SidebarItem href="/" label="Home" isActive={pathname === "/"} />
+            <SidebarItem href="/" label="Me" isActive={pathname === "/"} />
             <SidebarItem
-              href="/book"
-              label="Book a Call"
-              isActive={pathname === "/book"}
-              isNew
+              href="/writing"
+              label="Writings"
+              isActive={pathname.startsWith("/writing")}
             />
-          </SidebarSection>
-
-          <SidebarSection label="Work">
-            <SidebarGroup label="Experience" icon={<Briefcase />} defaultOpen>
-              <SidebarItem
-                href="/the20hr-co"
-                label="The20hr.co"
-                isActive={pathname === "/the20hr-co"}
-              />
-              <SidebarItem
-                href="https://www.fiftyfiveandfive.com/"
-                label="Fifty Five and Five"
-                external
-              />
-            </SidebarGroup>
-
-            <SidebarGroup label="Projects" icon={<FolderGit2 />} defaultOpen>
-              <SidebarItem
-                href="https://github.com/mousberg/le-commit"
-                label="Le Commit"
-                external
-              />
-              <SidebarItem
-                href="https://github.com/HenryAllen04/Veo3-Chain"
-                label="Veo3-Chain"
-                external
-              />
-              <SidebarItem
-                href="https://github.com/dame-time/sav-quest"
-                label="Sav Quest"
-                external
-              />
-            </SidebarGroup>
-          </SidebarSection>
-
-          <SidebarSection label="Connect">
-            <SidebarGroup label="Elsewhere" icon={<AtSign />} defaultOpen>
-              <SidebarItem
-                href="https://linkedin.com/in/henryallen"
-                label="LinkedIn"
-                external
-              />
-              <SidebarItem
-                href="https://github.com/HenryAllen04"
-                label="GitHub"
-                external
-              />
-              <SidebarItem
-                href="https://www.unicrnmafia.com/"
-                label="Unicorn Mafia"
-                external
-              />
-              <SidebarItem
-                href="mailto:Henry01Allen@gmail.com"
-                label="Email"
-                external
-              />
-            </SidebarGroup>
+            <SidebarItem
+              href="/information-diet"
+              label="Information Diet"
+              isActive={pathname === "/information-diet"}
+            />
           </SidebarSection>
         </SidebarContent>
 

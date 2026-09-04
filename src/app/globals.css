@@ -854,6 +854,320 @@ footer .footer-right {
   }
 }
 
+/* ─── New site (manifesto motion language, monochrome) ─────────────── */
+
+:root {
+  /* Full variable Newsreader (set by next/font); subset woff2 fallback */
+  --font-essay: var(--font-newsreader, 'Newsreader'), Georgia, serif;
+}
+
+/* Divider drawn by <AnimatedDivider> */
+.reveal-divider {
+  border: none;
+  border-top: 1px solid var(--mono4);
+  margin: 0;
+  transform-origin: left;
+}
+
+/* Underline reveal on hover (from the manifesto, monochrome) */
+.link-reveal {
+  position: relative;
+  display: inline-block;
+}
+
+.link-reveal:hover {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link-reveal::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 0;
+    background: var(--mono8);
+    transition: width 300ms var(--ease-out-quad);
+  }
+
+  .link-reveal:hover::after {
+    width: 100%;
+  }
+}
+
+/* ─── Home ── */
+.home {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--page-top) 24px var(--gap-4x);
+  min-height: calc(100vh - var(--footer-height));
+}
+
+.home-logo {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.home h1 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.home-bio {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 52ch;
+}
+
+.home-bio em {
+  font-family: var(--font-essay);
+}
+
+.home-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 32px 0 0;
+}
+
+.home-links a {
+  font-size: 14px;
+  color: var(--mono9);
+}
+
+.home-links a:hover {
+  color: var(--fg);
+  opacity: 1;
+}
+
+/* ─── Index pages (Writings, Information Diet) ── */
+.index-page {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--page-top) 24px var(--gap-4x);
+  min-height: calc(100vh - var(--footer-height));
+}
+
+.index-page h1 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.index-lede {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--mono9);
+  margin-bottom: 48px;
+  max-width: 52ch;
+}
+
+.index-lede em {
+  font-family: var(--font-essay);
+  color: var(--fg);
+}
+
+.index-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.index-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--mono3);
+}
+
+.index-item:hover {
+  opacity: 1;
+}
+
+.index-item-title {
+  font-family: var(--font-essay);
+  font-size: 19px;
+  transition: color var(--transition);
+}
+
+.index-item:hover .index-item-title {
+  color: var(--mono8);
+}
+
+.index-item-date {
+  font-size: 12px;
+  color: var(--mono8);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ─── Essay ── */
+.essay {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--page-top) 24px var(--gap-4x);
+}
+
+.essay-date {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mono8);
+  margin-bottom: 16px;
+}
+
+.essay h1 {
+  font-family: var(--font-essay);
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 32px;
+  text-wrap: balance;
+}
+
+.essay p {
+  font-family: var(--font-essay);
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.essay-intro-para {
+  margin-bottom: 22px;
+}
+
+.essay strong {
+  font-weight: 600;
+}
+
+.essay-section {
+  margin-top: 40px;
+}
+
+.essay-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 28px 0 16px;
+}
+
+.essay-section-heading h2 {
+  font-family: var(--font-essay);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--fg);
+  text-wrap: balance;
+}
+
+.essay-section-number {
+  font-size: 13px;
+  color: var(--mono7);
+  font-variant-numeric: tabular-nums;
+}
+
+.essay-section p + p,
+.essay-section > div + div {
+  margin-top: 22px;
+}
+
+.essay-quote {
+  padding: 48px 0;
+  text-align: center;
+}
+
+.essay-quote blockquote {
+  font-family: var(--font-essay);
+  font-size: 26px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--mono7);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.essay-quote cite {
+  display: block;
+  margin-top: 20px;
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mono8);
+}
+
+.essay-end {
+  margin-top: 64px;
+}
+
+.essay-back {
+  font-size: 14px;
+  color: var(--mono8);
+}
+
+.essay-back:hover {
+  color: var(--fg);
+  opacity: 1;
+}
+
+/* ─── Information diet ── */
+.diet-section {
+  margin-top: 40px;
+}
+
+.diet-section h2 {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mono9);
+  margin: 24px 0 16px;
+}
+
+.diet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.diet-item {
+  padding: 10px 0;
+}
+
+.diet-item-title {
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.diet-item-by {
+  color: var(--mono8);
+}
+
+.diet-item-note {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--mono9);
+  margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .essay h1 {
+    font-size: 30px;
+  }
+
+  .essay p {
+    font-size: 17px;
+  }
+}
+
 /* Back Navigation Overlay */
 .back-navigation-overlay {
   position: fixed;
