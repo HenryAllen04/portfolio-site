@@ -1,9 +1,19 @@
 /**
- * Information diet — a heading with real sections inside it (Books,
- * Podcasts, Design Courses). Books are grouped under year headers in a
- * two-column grid; a note on an item surfaces on hover (inline on touch).
- * NOTE: every entry below is a placeholder for Henry to replace with the
- * real log — titles chosen only to shape the layout.
+ * Information diet — the data file IS the CMS. To add:
+ *
+ *   Book:    { title: "…", by: "…", year: 2026 }
+ *            → drops into the right year group automatically (a new year
+ *              creates its own header). Add `note: "…"` for a hover note,
+ *              `href: "…"` to make the title a link.
+ *   Podcast / Design course: same shape, minus `year`, in that section's
+ *            `items` array.
+ *   New section (e.g. Newsletters): copy a section object, give it a
+ *            unique `id` (prefix "diet-") — it appears on the page AND
+ *            in the sidebar drill-down automatically.
+ *
+ * Order within a year/section = the order written here.
+ * NOTE: every entry below is a placeholder shaping the layout until
+ * Henry pours in the real log (~20 books, real courses, etc.).
  */
 
 export interface DietItem {
