@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import SiteSidebar from "@/components/sidebar/SiteSidebar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -47,7 +48,10 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        {children}
+        <div className="app-shell">
+          <SiteSidebar />
+          <div className="app-content">{children}</div>
+        </div>
         <Analytics />
       </body>
     </html>

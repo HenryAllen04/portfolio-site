@@ -7,7 +7,6 @@
 
 import { useEffect } from "react";
 import Footer from "@/components/Footer";
-import BackNavigation from "@/components/BackNavigation";
 
 export default function The20hrCoPage() {
   useEffect(() => {
@@ -22,7 +21,6 @@ export default function The20hrCoPage() {
 
   return (
     <>
-      <BackNavigation />
       <div className="blur" aria-hidden="true"></div>
       <main>
         <div className="main-grid">
