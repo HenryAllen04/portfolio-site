@@ -57,10 +57,8 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <div className="app-shell">
-          <SiteSidebar />
-          <div className="app-content">{children}</div>
-        </div>
+        <SiteSidebar />
+        {children}
         <Analytics />
       </body>
     </html>

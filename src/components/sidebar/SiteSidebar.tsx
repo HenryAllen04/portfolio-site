@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * Purpose: Site navigation sidebar — three pieces: Me, Writings,
- * Information Diet. Wraps the ported unlumen sidebar-001 component and
- * handles the mobile slide-in.
+ * Purpose: Overlay navigation. A toggle in the top-left slides the sidebar
+ * over the page. On the one-page home, a scrollspy tracks which section is
+ * in view and the active (orange) indicator moves between Me, Writings and
+ * Information Diet.
  */
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PanelLeft, X } from "lucide-react";
 import {
@@ -19,6 +19,12 @@ import {
   SidebarSection,
   useSidebarEffects,
 } from "./Sidebar";
+
+const SECTIONS = [
+  { id: "me", label: "Me" },
+  { id: "writings", label: "Writings" },
+  { id: "information-diet", label: "Information Diet" },
+] as const;
 
 function EffectsToggle() {
   const { enabled, toggle } = useSidebarEffects();
@@ -32,57 +38,74 @@ function EffectsToggle() {
 
 export default function SiteSidebar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("me");
 
-  // Close the mobile drawer on navigation
+  // Close the overlay on route navigation
   useEffect(() => {
-    setMobileOpen(false);
+    setOpen(false);
   }, [pathname]);
+
+  // Scrollspy — only meaningful on the one-page home
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      // Active = section crossing a band in the upper-middle of the viewport
+      { rootMargin: "-30% 0px -55% 0px" },
+    );
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  const active = pathname.startsWith("/writing")
+    ? "writings"
+    : pathname === "/"
+      ? activeSection
+      : "";
 
   return (
     <>
       <button
         type="button"
-        className="sb-mobile-toggle"
-        aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-        onClick={() => setMobileOpen((v) => !v)}
+        className="sb-toggle"
+        aria-label={open ? "Close navigation" : "Open navigation"}
+        onClick={() => setOpen((v) => !v)}
       >
-        {mobileOpen ? <X size={18} /> : <PanelLeft size={18} />}
+        {open ? <X size={18} /> : <PanelLeft size={18} />}
       </button>
 
-      {mobileOpen && (
+      {open && (
         <div
           className="sb-backdrop"
           aria-hidden="true"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => setOpen(false)}
         />
       )}
 
-      <Sidebar
-        defaultWidth={220}
-        className={mobileOpen ? "is-mobile-open" : undefined}
-      >
+      <Sidebar defaultWidth={260} className={open ? "is-open" : undefined}>
         <SidebarHeader>
-          <Link href="/" className="sb-brand">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/halogo.svg" alt="" className="sb-brand-logo" />
-            <span className="sb-brand-name">Henry Allen</span>
-          </Link>
+          <span className="sb-brand-name">Henry Allen</span>
         </SidebarHeader>
 
         <SidebarContent>
           <SidebarSection>
-            <SidebarItem href="/" label="Me" isActive={pathname === "/"} />
-            <SidebarItem
-              href="/writing"
-              label="Writings"
-              isActive={pathname.startsWith("/writing")}
-            />
-            <SidebarItem
-              href="/information-diet"
-              label="Information Diet"
-              isActive={pathname === "/information-diet"}
-            />
+            {SECTIONS.map(({ id, label }) => (
+              <SidebarItem
+                key={id}
+                href={`/#${id}`}
+                label={label}
+                isActive={active === id}
+                onClick={() => setOpen(false)}
+              />
+            ))}
           </SidebarSection>
         </SidebarContent>
 

@@ -28,7 +28,9 @@
 :root {
   /* Layout */
   --page-width: 1072px;
-  --content-width: 640px;
+  --content-width: 720px;
+  /* Accent — used only for the active indicator in the nav dial */
+  --accent: #cd5700;
   --page-left: auto;
   --page-top: 128px;
   --header-height: 48px;
@@ -92,6 +94,7 @@
   :root {
     --bg: #1c1c1c;
     --fg: #fafafa;
+    --accent: #ff720a;
     --mono1: #1c1c1c;
     --mono2: #303030;
     --mono3: #454545;
@@ -134,6 +137,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   font-family: var(--font-ui);
   color: var(--fg);
   background: var(--bg);
@@ -501,59 +505,36 @@ footer .footer-right {
   display: block;
 }
 
-/* App Shell (sidebar + content) */
-.app-shell {
-  display: flex;
-  min-height: 100vh;
-}
-
-.app-content {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Sidebar (ported from unlumen sidebar-001, restyled to site system) */
+/* Sidebar — click-to-open overlay (mechanics from unlumen sidebar-001) */
 .sb-root {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   height: 100vh;
   height: 100dvh;
-  width: var(--sb-width, 240px);
-  flex-shrink: 0;
+  width: var(--sb-width, 260px);
   display: flex;
   flex-direction: column;
   background: var(--bg);
   font-family: var(--font-ui);
-  z-index: var(--layer-header);
+  border-right: 1px solid var(--mono3);
+  transform: translateX(-100%);
+  transition: transform var(--transition-med);
+  z-index: 100;
+}
+
+.sb-root.is-open {
+  transform: translateX(0);
 }
 
 .sb-resize-handle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 4px;
-  cursor: col-resize;
-  z-index: 20;
-}
-
-.sb-resize-line {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 1px;
-  background: var(--mono3);
-  transition: background var(--transition);
-}
-
-.sb-resize-handle:hover .sb-resize-line {
-  background: var(--mono5);
+  display: none;
 }
 
 .sb-header {
   flex-shrink: 0;
-  padding: 20px 16px 8px 16px;
+  /* Clear the fixed toggle button in the top-left */
+  padding: 26px 16px 8px 64px;
 }
 
 .sb-brand {
@@ -632,7 +613,7 @@ footer .footer-right {
   height: 1.8px;
   transform: translateY(-50%);
   border-radius: 999px;
-  background: var(--fg);
+  background: var(--accent);
 }
 
 .sb-dash {
@@ -795,63 +776,35 @@ footer .footer-right {
   background: var(--fg);
 }
 
-/* Mobile: sidebar becomes a slide-in drawer */
-.sb-mobile-toggle {
-  display: none;
+/* Nav toggle + backdrop */
+.sb-toggle {
   position: fixed;
-  top: 16px;
-  left: 16px;
+  top: 20px;
+  left: 20px;
   z-index: 110;
   width: 36px;
   height: 36px;
+  display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius);
-  border: 1px solid var(--mono4);
+  border: 1px solid var(--mono3);
   background: var(--bg);
   color: var(--mono9);
   cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.sb-toggle:hover {
+  border-color: var(--mono5);
+  color: var(--fg);
 }
 
 .sb-backdrop {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.2);
   z-index: 90;
-}
-
-@media (max-width: 768px) {
-  .sb-mobile-toggle {
-    display: flex;
-  }
-
-  .sb-backdrop {
-    display: block;
-  }
-
-  .sb-root {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 260px;
-    transform: translateX(-100%);
-    transition: transform var(--transition-med);
-    border-right: 1px solid var(--mono3);
-    z-index: 100;
-  }
-
-  .sb-root.is-mobile-open {
-    transform: translateX(0);
-  }
-
-  .sb-resize-handle {
-    display: none;
-  }
-
-  .sb-header {
-    padding-top: 24px;
-  }
 }
 
 /* ─── New site (manifesto motion language, monochrome) ─────────────── */
@@ -896,24 +849,48 @@ footer .footer-right {
   }
 }
 
-/* ─── Home ── */
-.home {
+/* ─── One-page home ── */
+.one-page {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: var(--page-top) 24px var(--gap-4x);
-  min-height: calc(100vh - var(--footer-height));
+  padding: var(--page-top) 24px var(--gap-8x);
 }
 
-.home-logo {
-  width: 48px;
-  height: 48px;
+.one-page h1 {
+  font-size: 32px;
   margin-bottom: 24px;
-  display: block;
 }
 
-.home h1 {
-  font-size: 28px;
-  margin-bottom: 24px;
+.op-section {
+  /* Generous scroll room so the scrollspy dial has distinct stops */
+  padding-bottom: var(--gap-4x);
+  scroll-margin-top: 96px;
+}
+
+.op-heading {
+  margin: 48px 0 20px;
+}
+
+.op-heading h2 {
+  font-family: var(--font-essay);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--fg);
+}
+
+.op-lede {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--mono9);
+  margin-bottom: 40px;
+  max-width: 60ch;
+}
+
+.op-lede em {
+  font-family: var(--font-essay);
+  color: var(--fg);
 }
 
 .home-bio {
@@ -1008,7 +985,7 @@ footer .footer-right {
 
 /* ─── Essay ── */
 .essay {
-  max-width: 640px;
+  max-width: var(--content-width);
   margin: 0 auto;
   padding: var(--page-top) 24px var(--gap-4x);
 }
@@ -1119,17 +1096,42 @@ footer .footer-right {
 }
 
 /* ─── Information diet ── */
-.diet-section {
+.diet-theme {
   margin-top: 40px;
 }
 
-.diet-section h2 {
+.diet-theme h3 {
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--mono9);
-  margin: 24px 0 16px;
+  margin: 0 0 16px;
+  font-family: var(--font-ui);
+}
+
+.diet-quote {
+  padding: 8px 0 24px;
+}
+
+.diet-quote blockquote {
+  font-family: var(--font-essay);
+  font-size: 22px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--mono8);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.diet-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mono7);
 }
 
 .diet-list {

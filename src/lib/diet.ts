@@ -1,46 +1,63 @@
 /**
- * Information diet — what goes in. Append entries; the page groups by
- * category and shows them newest-first within each group.
- * NOTE: sample entries below are placeholders for Henry to replace.
+ * Information diet — what goes in, grouped by theme. Each theme can open
+ * with a quote, then lists the things worth their place.
+ * NOTE: entries marked "Placeholder" are for Henry to replace.
  */
 
-export type DietCategory = "Books" | "Podcasts" | "Newsletters & Blogs" | "Watching";
+export interface DietQuote {
+  text: string;
+  attribution: string;
+}
 
 export interface DietEntry {
   title: string;
   /** Author, host, or source. */
   by?: string;
-  category: DietCategory;
   /** One-line takeaway — why it earned its place. */
   note?: string;
   href?: string;
 }
 
-export const diet: DietEntry[] = [
+export interface DietTheme {
+  theme: string;
+  quote?: DietQuote;
+  entries: DietEntry[];
+}
+
+export const dietThemes: DietTheme[] = [
   {
-    title: "The Second Mountain",
-    by: "David Brooks",
-    category: "Books",
-    note: "Placeholder — replace with what you're actually reading.",
+    theme: "History",
+    quote: {
+      text: "Those who cannot remember the past are condemned to repeat it.",
+      attribution: "George Santayana",
+    },
+    entries: [
+      {
+        title: "The Lessons of History",
+        by: "Will & Ariel Durant",
+        note: "Placeholder — swap in your two history books.",
+      },
+      {
+        title: "Founders Podcast",
+        by: "David Senra",
+        note: "Placeholder — biographies of history's greatest entrepreneurs.",
+        href: "https://www.founderspodcast.com/",
+      },
+    ],
   },
   {
-    title: "Founders Podcast",
-    by: "David Senra",
-    category: "Podcasts",
-    note: "Placeholder — biographies of history's greatest entrepreneurs.",
-    href: "https://www.founderspodcast.com/",
-  },
-  {
-    title: "Stratechery",
-    by: "Ben Thompson",
-    category: "Newsletters & Blogs",
-    note: "Placeholder — strategy and the business of tech.",
-    href: "https://stratechery.com/",
-  },
-  {
-    title: "How to Build the Future",
-    by: "Y Combinator",
-    category: "Watching",
-    note: "Placeholder — founder interviews.",
+    theme: "Psychology",
+    entries: [
+      {
+        title: "Influence",
+        by: "Robert Cialdini",
+        note: "Placeholder — the mechanics of persuasion.",
+      },
+      {
+        title: "Thinking, Fast and Slow",
+        by: "Daniel Kahneman",
+        note: "Placeholder — how judgement actually works.",
+      },
+    ],
   },
 ];
