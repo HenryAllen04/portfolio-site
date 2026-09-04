@@ -723,11 +723,13 @@ footer .footer-right {
   margin: 2px 0;
 }
 
-/* Dial ticks between labelled stops — the indicator travels through
-   these as you scroll */
+/* Dial ticks between labelled stops — fixed geometry. The indicator
+   travels through them on scroll, and an expanded piece's children
+   appear ON them (labels are absolutely positioned, so revealing them
+   never moves the dial). Rows are tall enough to carry a label. */
 .sb-tick {
   position: relative;
-  height: 13px;
+  height: 25px;
 }
 
 .sb-tick-dash {
@@ -746,51 +748,64 @@ footer .footer-right {
   background: var(--mono6);
 }
 
-/* Sidebar drill-down: children of the active piece — mini dial language.
-   Sub-dashes sit on the same rail line as the main ticks. */
-.sb-subitems {
-  list-style: none;
-  margin: 0;
-  padding: 6px 0 10px;
+/* Labels that land on ticks when a piece is expanded — keyframe entrance
+   (snappy staggered ease-out); absolutely positioned so nothing moves */
+.sb-tick-label {
+  position: absolute;
+  left: 34px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  animation: sb-label-in 180ms var(--ease-out-quad) both;
+  animation-delay: calc(40ms + var(--i, 0) * 40ms);
 }
 
-.sb-subitem {
-  position: relative;
+@keyframes sb-label-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sb-sublink {
   display: block;
-  padding: 8px 8px 8px 34px;
+  width: 100%;
+  padding: 4px 8px 4px 0;
   font-size: 13px;
   color: var(--mono9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color var(--transition), transform var(--transition);
 }
 
-.sb-subitem-dash {
-  position: absolute;
-  left: 4px;
-  top: 50%;
-  width: 12px;
-  height: 1px;
-  background: var(--mono5);
-  transition: width var(--transition), background var(--transition),
-    height var(--transition);
-}
-
-.sb-subitem:hover {
+.sb-sublink:hover {
   color: var(--fg);
   opacity: 1;
   transform: translateX(3px);
 }
 
-.sb-subitem:hover .sb-subitem-dash {
+.sb-sublink.is-active {
+  color: var(--fg);
+}
+
+/* The tick's own dash doubles as the label's dash */
+.sb-tick.has-label .sb-tick-dash {
+  background: var(--mono5);
+}
+
+.sb-tick.has-label:hover .sb-tick-dash {
   width: 17px;
   background: var(--mono7);
 }
 
-.sb-subitem.is-active {
-  color: var(--fg);
-  transform: translateX(4px);
-}
-
-.sb-subitem.is-active .sb-subitem-dash {
+.sb-tick.has-active-label .sb-tick-dash {
   width: 20px;
   height: 1.8px;
   border-radius: 999px;

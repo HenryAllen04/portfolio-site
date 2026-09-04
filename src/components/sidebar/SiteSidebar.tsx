@@ -6,16 +6,18 @@
  * as the page, no darkening. Clicking the page (outside the sidebar)
  * dismisses it; navigating between pieces keeps it open.
  *
- * The dial: Me / Writings / Information Diet with tick marks between
- * them. Scroll progress moves the orange indicator through the ticks.
- * The active piece unfolds its children (essays under Writings, sections
- * under Information Diet) — the drill-down.
+ * The dial has FIXED geometry: every gap always shows its full run of
+ * ticks (a few more than needed, by design), so nothing ever pushes the
+ * other pieces around. Clicking a piece reveals its children ON the
+ * existing ticks below it — labels load in with a snappy staggered
+ * ease-out; collapsing just fades them off the ticks. Scroll progress
+ * moves the orange indicator through the same ticks.
  */
 
 import { Fragment, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { SidebarToggleIcon } from "./SidebarToggleIcon";
 import { writings } from "@/lib/writings";
 import { dietSections } from "@/lib/diet";
@@ -32,55 +34,70 @@ const SECTIONS = [
   { id: "information-diet", label: "Information Diet" },
 ] as const;
 
-// Ticks between each pair of labelled stops
-const TICKS_PER_GAP = 4;
+// Ticks in the run below each labelled stop (more than we need — the
+// spare ones are part of the instrument). The last section gets a
+// trailing decorative run so its children have ticks to land on too.
+const TICKS_PER_GAP = 5;
 const STOPS_PER_GAP = TICKS_PER_GAP + 1;
 
-/** Children that unfold beneath the active dial stop — same dial
- *  language as the labelled pieces, mini scale: dash, hover extend +
- *  darken, orange bar when active, staggered entrance. */
-function SubItems({
-  items,
+interface SubItem {
+  label: string;
+  href: string;
+  isActive?: boolean;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+}
+
+/** One fixed-height tick row. `child` (when the piece above is expanded)
+ *  renders as a label on this tick — absolutely positioned, so revealing
+ *  or hiding it never moves the dial. */
+function TickRow({
+  stop,
+  activeStop,
+  child,
+  index,
 }: {
-  items: { label: string; href: string; isActive?: boolean; onClick?: React.MouseEventHandler<HTMLAnchorElement> }[];
+  /** Scroll stop this tick represents; -1 for trailing decorative ticks. */
+  stop: number;
+  activeStop: number;
+  child?: SubItem;
+  index: number;
 }) {
+  const d = stop < 0 ? 99 : Math.abs(stop - activeStop);
+  const dashClass =
+    "sb-tick-dash" + (d === 0 ? " is-active" : d === 1 ? " is-near" : "");
+
   return (
-    <AnimatePresence initial={false}>
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ height: "auto", opacity: 1 }}
-        exit={{ height: 0, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 420, damping: 34 }}
-        style={{ overflow: "hidden" }}
-      >
-        <ul className="sb-subitems">
-          {items.map((item, i) => (
-            <motion.li
-              key={item.href}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 30,
-                delay: 0.1 + i * 0.07,
-              }}
-            >
-              <Link
-                href={item.href}
-                onClick={item.onClick}
-                className={
-                  item.isActive ? "sb-subitem is-active" : "sb-subitem"
-                }
-              >
-                <span className="sb-subitem-dash" aria-hidden="true" />
-                {item.label}
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
-      </motion.div>
-    </AnimatePresence>
+    <div
+      className={
+        "sb-tick" +
+        (child ? " has-label" : "") +
+        (child?.isActive ? " has-active-label" : "")
+      }
+    >
+      {stop >= 0 && activeStop === stop && (
+        <motion.span
+          layoutId="sb-active-bar"
+          className="sb-active-bar"
+          animate={{ width: 20 }}
+          transition={{ type: "spring", stiffness: 1100, damping: 50 }}
+        />
+      )}
+      <span className={dashClass} aria-hidden="true" />
+      {child && (
+        <div
+          className="sb-tick-label"
+          style={{ "--i": index } as React.CSSProperties}
+        >
+          <Link
+            href={child.href}
+            onClick={child.onClick}
+            className={child.isActive ? "sb-sublink is-active" : "sb-sublink"}
+          >
+            {child.label}
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -91,7 +108,7 @@ export default function SiteSidebar() {
   // scrolling never re-renders the sidebar needlessly (no jitter)
   const [scrollStop, setScrollStop] = useState(0);
   // Drill-down is click-driven, never scroll-driven: scrolling moves the
-  // indicator, only a click changes the sidebar's layout
+  // indicator, only a click changes what the ticks display
   const [expanded, setExpanded] = useState<number | null>(null);
 
   // Keyboard: S toggles, Escape closes (as in unlumen sidebar-002)
@@ -148,16 +165,23 @@ export default function SiteSidebar() {
   }, [pathname]);
 
   // Hash links don't re-fire when the hash is unchanged — scroll manually
-  // so a dial click always answers, then keep the URL in sync.
+  // so a dial click always answers, then keep the URL in sync. The scroll
+  // starts two frames later: Next's patched replaceState and the label
+  // reveal both do work in the click frame that cancels a smooth
+  // scrollIntoView started synchronously.
   const goTo = useCallback(
     (id: string): React.MouseEventHandler<HTMLAnchorElement> =>
       (e) => {
         if (pathname !== "/") return; // real navigation to /#id
         e.preventDefault();
-        document
-          .getElementById(id)
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `/#${id}`);
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() =>
+            document
+              .getElementById(id)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" }),
+          ),
+        );
       },
     [pathname],
   );
@@ -171,16 +195,13 @@ export default function SiteSidebar() {
 
   const totalStops = (SECTIONS.length - 1) * STOPS_PER_GAP + 1;
 
-  /** Distance-based emphasis so the dial reads like a ruler. */
-  const tickClass = (stop: number, base: string) => {
+  /** Distance-based emphasis so the rail reads like a ruler. */
+  const railTickClass = (stop: number, base: string) => {
     const d = Math.abs(stop - activeStop);
-    return (
-      base +
-      (d === 0 ? " is-active" : d === 1 ? " is-near" : "")
-    );
+    return base + (d === 0 ? " is-active" : d === 1 ? " is-near" : "");
   };
 
-  const subItemsFor = (main: number) => {
+  const subItemsFor = (main: number): SubItem[] => {
     if (main === 1) {
       return [...writings]
         .sort((a, b) => b.date.localeCompare(a.date))
@@ -232,7 +253,7 @@ export default function SiteSidebar() {
           {Array.from({ length: totalStops }).map((_, s) => (
             <span
               key={s}
-              className={tickClass(
+              className={railTickClass(
                 s,
                 "sb-rail-tick" + (s % STOPS_PER_GAP === 0 ? " is-stop" : ""),
               )}
@@ -246,6 +267,7 @@ export default function SiteSidebar() {
           <SidebarSection>
             {SECTIONS.map(({ id, label }, i) => {
               const subItems = subItemsFor(i);
+              const isLast = i === SECTIONS.length - 1;
               return (
                 <Fragment key={id}>
                   <SidebarItem
@@ -257,30 +279,18 @@ export default function SiteSidebar() {
                       setExpanded(subItems.length > 0 ? i : null);
                     }}
                   />
-                  {expanded === i && subItems.length > 0 && (
-                    <SubItems items={subItems} />
-                  )}
-                  {i < SECTIONS.length - 1 &&
-                    Array.from({ length: TICKS_PER_GAP }).map((_, t) => {
-                      const stop = i * STOPS_PER_GAP + t + 1;
-                      return (
-                        <div className="sb-tick" key={t} aria-hidden="true">
-                          {activeStop === stop && (
-                            <motion.span
-                              layoutId="sb-active-bar"
-                              className="sb-active-bar"
-                              animate={{ width: 20 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 1100,
-                                damping: 50,
-                              }}
-                            />
-                          )}
-                          <span className={tickClass(stop, "sb-tick-dash")} />
-                        </div>
-                      );
-                    })}
+                  {/* The tick run below this piece — always rendered, so
+                      expanding never moves anything. Trailing run after
+                      the last piece is decorative (stop -1). */}
+                  {Array.from({ length: TICKS_PER_GAP }).map((_, t) => (
+                    <TickRow
+                      key={t}
+                      stop={isLast ? -1 : i * STOPS_PER_GAP + t + 1}
+                      activeStop={activeStop}
+                      child={expanded === i ? subItems[t] : undefined}
+                      index={t}
+                    />
+                  ))}
                 </Fragment>
               );
             })}
