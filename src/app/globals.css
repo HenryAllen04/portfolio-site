@@ -530,53 +530,64 @@ footer .footer-right {
   display: none;
 }
 
-.sb-header {
-  flex-shrink: 0;
-  /* Clear the fixed toggle button in the top-left */
-  padding: 28px 16px 10px 72px;
-}
-
-/* The brand doesn't ride the slide-in (it would fly through the toggle
-   icon) — it fades in after the panel has settled */
-.sb-brand-name {
-  opacity: 0;
-  transition: opacity 220ms var(--ease-out-quad);
-}
-
-.sb-root.is-open .sb-brand-name {
-  opacity: 1;
-  transition-delay: 240ms;
-}
-
-.sb-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sb-brand:hover {
-  opacity: 1;
-}
-
-.sb-brand-logo {
-  width: 24px;
-  height: 24px;
-  display: block;
-}
-
-.sb-brand-name {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-}
-
 .sb-content {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 12px;
+  /* Clear breathing room below the fixed toggle icon */
+  padding: 88px 12px 16px;
   scrollbar-width: none;
+}
+
+/* Dial entries cascade in once the panel has slid over (sidebar-002) */
+.sb-section > * {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 260ms var(--ease-out-quad),
+    transform 260ms var(--ease-out-quad);
+}
+
+.sb-root.is-open .sb-section > * {
+  opacity: 1;
+  transform: none;
+}
+
+.sb-root.is-open .sb-section > *:nth-child(1) { transition-delay: 120ms; }
+.sb-root.is-open .sb-section > *:nth-child(2) { transition-delay: 145ms; }
+.sb-root.is-open .sb-section > *:nth-child(3) { transition-delay: 170ms; }
+.sb-root.is-open .sb-section > *:nth-child(4) { transition-delay: 195ms; }
+.sb-root.is-open .sb-section > *:nth-child(5) { transition-delay: 220ms; }
+.sb-root.is-open .sb-section > *:nth-child(6) { transition-delay: 245ms; }
+.sb-root.is-open .sb-section > *:nth-child(7) { transition-delay: 270ms; }
+.sb-root.is-open .sb-section > *:nth-child(8) { transition-delay: 295ms; }
+.sb-root.is-open .sb-section > *:nth-child(9) { transition-delay: 320ms; }
+.sb-root.is-open .sb-section > *:nth-child(10) { transition-delay: 345ms; }
+.sb-root.is-open .sb-section > *:nth-child(11) { transition-delay: 370ms; }
+
+/* Toggle tooltip on hover (sidebar-002 style) */
+@media (hover: hover) and (pointer: fine) {
+  .sb-toggle::after {
+    content: "Sidebar · S";
+    position: absolute;
+    top: 100%;
+    left: 4px;
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    background: var(--mono12);
+    color: var(--mono1);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-2px);
+    pointer-events: none;
+    transition: opacity var(--transition), transform var(--transition);
+  }
+
+  .sb-toggle:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 350ms;
+  }
 }
 
 .sb-content::-webkit-scrollbar {
@@ -613,8 +624,23 @@ footer .footer-right {
 
 .sb-item {
   position: relative;
-  /* Breathing room between dial entries so dash clusters don't merge */
-  margin: 7px 0;
+  margin: 2px 0;
+}
+
+/* Dial ticks between labelled stops — the indicator travels through
+   these as you scroll */
+.sb-tick {
+  position: relative;
+  height: 13px;
+}
+
+.sb-tick-dash {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: var(--mono4);
 }
 
 .sb-active-bar {

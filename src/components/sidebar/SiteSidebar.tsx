@@ -1,21 +1,24 @@
 "use client";
 
 /**
- * Purpose: Overlay navigation. The animated toggle (from Vultur-ai/ontology)
- * slides the sidebar over the page — same background as the page, no
- * darkening. Clicking the page (outside the sidebar) dismisses it;
- * navigating between pieces keeps it open. On the one-page home a
- * scrollspy moves the orange active indicator between sections.
+ * Purpose: Overlay navigation dial. The animated toggle (from
+ * Vultur-ai/ontology) slides the sidebar over the page — same background
+ * as the page, no darkening. Clicking the page (outside the sidebar)
+ * dismisses it; navigating between pieces keeps it open.
+ *
+ * The dial: Me / Writings / Information Diet with tick marks between
+ * them. Scroll progress on the one-page home moves the orange indicator
+ * through the ticks, so it travels rather than hopping section to section.
  */
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 import { SidebarToggleIcon } from "./SidebarToggleIcon";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarItem,
   SidebarSection,
   useSidebarEffects,
@@ -26,6 +29,10 @@ const SECTIONS = [
   { id: "writings", label: "Writings" },
   { id: "information-diet", label: "Information Diet" },
 ] as const;
+
+// Ticks between each pair of labelled stops
+const TICKS_PER_GAP = 4;
+const STOPS_PER_GAP = TICKS_PER_GAP + 1;
 
 function EffectsToggle() {
   const { enabled, toggle } = useSidebarEffects();
@@ -40,33 +47,58 @@ function EffectsToggle() {
 export default function SiteSidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("me");
+  // Fractional scroll position across sections: 0 = Me … 2 = Information Diet
+  const [progress, setProgress] = useState(0);
 
-  // Scrollspy — only meaningful on the one-page home. Deterministic:
-  // active = last section whose top has crossed a line 35% down the
-  // viewport (an IntersectionObserver misfires here because the long
-  // final section overlaps the band at the same time as short ones).
+  // Keyboard: S toggles, Escape closes (as in unlumen sidebar-002)
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      )
+        return;
+      if (e.key === "s" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        setOpen((v) => !v);
+      } else if (e.key === "Escape") {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   useEffect(() => {
     if (pathname !== "/") return;
     const onScroll = () => {
       const line = window.innerHeight * 0.35;
-      let current: string = SECTIONS[0].id;
-      for (const { id } of SECTIONS) {
-        const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= line) current = id;
+      const tops = SECTIONS.map(
+        ({ id }) =>
+          document.getElementById(id)?.getBoundingClientRect().top ?? Infinity,
+      );
+      let p = 0;
+      for (let i = 0; i < tops.length - 1; i++) {
+        if (line >= tops[i + 1]) {
+          p = i + 1;
+        } else if (line > tops[i]) {
+          p = i + (line - tops[i]) / (tops[i + 1] - tops[i]);
+          break;
+        }
       }
-      setActiveSection(current);
+      setProgress(p);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
-  const active = pathname.startsWith("/writing")
-    ? "writings"
+  const activeStop = pathname.startsWith("/writing")
+    ? 1 * STOPS_PER_GAP
     : pathname === "/"
-      ? activeSection
-      : "";
+      ? Math.round(progress * STOPS_PER_GAP)
+      : -1;
 
   return (
     <>
@@ -88,19 +120,37 @@ export default function SiteSidebar() {
       )}
 
       <Sidebar defaultWidth={260} className={open ? "is-open" : undefined}>
-        <SidebarHeader>
-          <span className="sb-brand-name">Henry Allen</span>
-        </SidebarHeader>
-
         <SidebarContent>
           <SidebarSection>
-            {SECTIONS.map(({ id, label }) => (
-              <SidebarItem
-                key={id}
-                href={`/#${id}`}
-                label={label}
-                isActive={active === id}
-              />
+            {SECTIONS.map(({ id, label }, i) => (
+              <Fragment key={id}>
+                <SidebarItem
+                  href={`/#${id}`}
+                  label={label}
+                  isActive={activeStop === i * STOPS_PER_GAP}
+                />
+                {i < SECTIONS.length - 1 &&
+                  Array.from({ length: TICKS_PER_GAP }).map((_, t) => {
+                    const stop = i * STOPS_PER_GAP + t + 1;
+                    return (
+                      <div className="sb-tick" key={t} aria-hidden="true">
+                        {activeStop === stop && (
+                          <motion.span
+                            layoutId="sb-active-bar"
+                            className="sb-active-bar"
+                            animate={{ width: 16 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 800,
+                              damping: 40,
+                            }}
+                          />
+                        )}
+                        <span className="sb-tick-dash" />
+                      </div>
+                    );
+                  })}
+              </Fragment>
             ))}
           </SidebarSection>
         </SidebarContent>
