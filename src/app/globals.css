@@ -1080,6 +1080,69 @@ footer .footer-right {
   color: var(--mono8);
 }
 
+/* The20hr.co — its own layout: jump link, portrait video + stacked media */
+.watch-story-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 4px 0 8px;
+  color: var(--mono7);
+  font-family: var(--font-essay);
+  font-size: 16px;
+  font-style: italic;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.watch-story-link:hover {
+  color: var(--mono9);
+}
+
+.essay-body > * + * {
+  margin-top: 22px;
+}
+
+.essay-story {
+  margin-top: 40px;
+}
+
+.story-media {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.story-media-portrait {
+  flex: 0 0 auto;
+  border: none;
+  border-radius: var(--radius-l);
+}
+
+.story-media-stack {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.story-media-stack img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--radius);
+}
+
+.story-media-stack iframe {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--radius);
+}
+
 .essay-media {
   display: flex;
   gap: 20px;
