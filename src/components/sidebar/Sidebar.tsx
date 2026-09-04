@@ -412,8 +412,8 @@ export function SidebarContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="sb-content" data-scroll-viewport>
+      {/* Hover pill removed — hover feedback is the copy darkening */}
       <div ref={containerRef} className="sb-content-inner">
-        <HoverHighlight />
         {children}
       </div>
     </div>

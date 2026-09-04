@@ -22,10 +22,8 @@ import { dietSections } from "@/lib/diet";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarItem,
   SidebarSection,
-  useSidebarEffects,
 } from "./Sidebar";
 
 const SECTIONS = [
@@ -38,17 +36,9 @@ const SECTIONS = [
 const TICKS_PER_GAP = 4;
 const STOPS_PER_GAP = TICKS_PER_GAP + 1;
 
-function EffectsToggle() {
-  const { enabled, toggle } = useSidebarEffects();
-  return (
-    <button type="button" onClick={toggle} className="sb-effects-toggle">
-      <span className={enabled ? "sb-effects-dot is-on" : "sb-effects-dot"} />
-      Effects {enabled ? "on" : "off"}
-    </button>
-  );
-}
-
-/** Children that unfold beneath the active dial stop. */
+/** Children that unfold beneath the active dial stop — same dial
+ *  language as the labelled pieces, mini scale: dash, hover extend +
+ *  darken, orange bar when active, staggered entrance. */
 function SubItems({
   items,
 }: {
@@ -64,8 +54,18 @@ function SubItems({
         style={{ overflow: "hidden" }}
       >
         <ul className="sb-subitems">
-          {items.map((item) => (
-            <li key={item.href}>
+          {items.map((item, i) => (
+            <motion.li
+              key={item.href}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 32,
+                delay: 0.05 + i * 0.045,
+              }}
+            >
               <Link
                 href={item.href}
                 onClick={item.onClick}
@@ -73,9 +73,10 @@ function SubItems({
                   item.isActive ? "sb-subitem is-active" : "sb-subitem"
                 }
               >
+                <span className="sb-subitem-dash" aria-hidden="true" />
                 {item.label}
               </Link>
-            </li>
+            </motion.li>
           ))}
         </ul>
       </motion.div>
@@ -279,10 +280,6 @@ export default function SiteSidebar() {
             })}
           </SidebarSection>
         </SidebarContent>
-
-        <SidebarFooter>
-          <EffectsToggle />
-        </SidebarFooter>
       </Sidebar>
     </>
   );

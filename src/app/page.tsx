@@ -30,25 +30,26 @@ function DietRow({
   item: { title: string; by?: string; note?: string; href?: string };
 }) {
   return (
-    <li className={item.note ? "diet-item has-note" : "diet-item"}>
-      <span className="diet-item-line" tabIndex={item.note ? 0 : undefined}>
-        <span className="diet-item-title">
-          {item.href ? (
-            <a
-              href={item.href}
-              rel="noopener"
-              target="_blank"
-              className="link-reveal"
-            >
-              {item.title}
-            </a>
-          ) : (
-            item.title
-          )}
-        </span>
-        {item.by && <span className="diet-item-by">{item.by}</span>}
+    <li
+      className={item.note ? "diet-item has-note" : "diet-item"}
+      tabIndex={item.note ? 0 : undefined}
+    >
+      <span className="diet-item-title">
+        {item.href ? (
+          <a
+            href={item.href}
+            rel="noopener"
+            target="_blank"
+            className="link-reveal"
+          >
+            {item.title}
+          </a>
+        ) : (
+          item.title
+        )}
       </span>
-      {item.note && <p className="diet-item-note">{item.note}</p>}
+      {item.by && <span className="diet-item-by">{item.by}</span>}
+      {item.note && <span className="diet-item-note">{item.note}</span>}
     </li>
   );
 }
@@ -132,9 +133,9 @@ export default function Home() {
           </ScrollFade>
 
           {dietSections.map((section) => (
-            <div key={section.id} id={section.id} className="diet-group">
-              <ScrollFade>
-                <h3>{section.title}</h3>
+            <div key={section.id} id={section.id} className="diet-section-block">
+              <ScrollFade threshold={0.05}>
+                <h3 className="diet-section-title">{section.title}</h3>
                 {section.blurb && (
                   <p className="diet-blurb">{section.blurb}</p>
                 )}
@@ -143,10 +144,10 @@ export default function Home() {
                 [...new Set(section.items.map((b) => b.year))]
                   .sort((a, b) => (b ?? 0) - (a ?? 0))
                   .map((year) => (
-                    <ScrollFade key={year} threshold={0.1}>
-                      <div className="diet-year-group">
-                        <span className="diet-year">{year}</span>
-                        <ul className="diet-list">
+                    <ScrollFade key={year} threshold={0.05}>
+                      <div className="diet-year-block">
+                        <h4 className="diet-year">{year}</h4>
+                        <ul className="diet-grid">
                           {section.items
                             .filter((b) => b.year === year)
                             .map((item) => (
@@ -157,8 +158,8 @@ export default function Home() {
                     </ScrollFade>
                   ))
               ) : (
-                <ScrollFade threshold={0.1}>
-                  <ul className="diet-list">
+                <ScrollFade threshold={0.05}>
+                  <ul className="diet-grid">
                     {section.items.map((item) => (
                       <DietRow key={item.title} item={item} />
                     ))}
