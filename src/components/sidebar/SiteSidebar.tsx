@@ -100,6 +100,8 @@ export default function SiteSidebar() {
       ? Math.round(progress * STOPS_PER_GAP)
       : -1;
 
+  const totalStops = (SECTIONS.length - 1) * STOPS_PER_GAP + 1;
+
   return (
     <>
       <button
@@ -117,6 +119,29 @@ export default function SiteSidebar() {
           aria-hidden="true"
           onClick={() => setOpen(false)}
         />
+      )}
+
+      {/* Collapsed dial: a whisper of the tick rail on the page edge so
+          scroll position stays visible without opening the sidebar */}
+      {pathname === "/" && (
+        <button
+          type="button"
+          className={open ? "sb-rail is-hidden" : "sb-rail"}
+          aria-label="Open navigation"
+          tabIndex={open ? -1 : 0}
+          onClick={() => setOpen(true)}
+        >
+          {Array.from({ length: totalStops }).map((_, s) => (
+            <span
+              key={s}
+              className={
+                "sb-rail-tick" +
+                (s % STOPS_PER_GAP === 0 ? " is-stop" : "") +
+                (s === activeStop ? " is-active" : "")
+              }
+            />
+          ))}
+        </button>
       )}
 
       <Sidebar defaultWidth={260} className={open ? "is-open" : undefined}>

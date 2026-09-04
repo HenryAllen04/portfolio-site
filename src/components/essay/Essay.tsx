@@ -16,6 +16,37 @@ import {
   IntroItem,
   ScrollFade,
 } from "@/components/reveal/Reveal";
+import { writings } from "@/lib/writings";
+
+/** Closing nav: back to the index plus older/newer neighbours. */
+export function EssayFooter({ slug }: { slug?: string }) {
+  const sorted = [...writings].sort((a, b) => b.date.localeCompare(a.date));
+  const i = slug ? sorted.findIndex((w) => w.slug === slug) : -1;
+  const newer = i > 0 ? sorted[i - 1] : undefined;
+  const older = i >= 0 ? sorted[i + 1] : undefined;
+
+  return (
+    <ScrollFade className="essay-end" threshold={0.1}>
+      <nav className="essay-footer-nav" aria-label="More writing">
+        <Link href="/#writings" className="essay-back">
+          ← All writing
+        </Link>
+        <div className="essay-adjacent">
+          {older && (
+            <Link href={`/writing/${older.slug}`} className="essay-back">
+              Older: {older.title}
+            </Link>
+          )}
+          {newer && (
+            <Link href={`/writing/${newer.slug}`} className="essay-back">
+              Newer: {newer.title}
+            </Link>
+          )}
+        </div>
+      </nav>
+    </ScrollFade>
+  );
+}
 
 function formatDate(iso: string) {
   return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", {
@@ -29,11 +60,14 @@ function formatDate(iso: string) {
 export function Essay({
   title,
   date,
+  slug,
   intro,
   children,
 }: {
   title: string;
   date: string;
+  /** Registry slug — enables older/newer navigation in the footer. */
+  slug?: string;
   /** Paragraphs revealed as part of the page-load intro, before the fold. */
   intro?: React.ReactNode[];
   children?: React.ReactNode;
@@ -57,11 +91,7 @@ export function Essay({
           </IntroItem>
         ))}
         {children}
-        <ScrollFade className="essay-end" threshold={0.1}>
-          <Link href="/writing" className="essay-back">
-            ← All writing
-          </Link>
-        </ScrollFade>
+        <EssayFooter slug={slug} />
       </article>
     </Intro>
   );

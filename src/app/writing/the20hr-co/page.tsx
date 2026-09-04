@@ -7,13 +7,13 @@
  * provide motion, they don't dictate structure.
  */
 
-import Link from "next/link";
 import {
   AnimatedDivider,
   Intro,
   IntroItem,
   ScrollFade,
 } from "@/components/reveal/Reveal";
+import { EssayFooter } from "@/components/essay/Essay";
 
 export default function The20hrCoPage() {
   return (
@@ -165,11 +165,7 @@ export default function The20hrCoPage() {
           </ScrollFade>
         </section>
 
-        <ScrollFade className="essay-end" threshold={0.1}>
-          <Link href="/writing" className="essay-back">
-            ← All writing
-          </Link>
-        </ScrollFade>
+        <EssayFooter slug="the20hr-co" />
       </article>
     </Intro>
   );

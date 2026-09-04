@@ -136,8 +136,24 @@
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Reduced motion: collapse all animation (manifesto approach) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
 html {
-  scroll-behavior: smooth;
   font-family: var(--font-ui);
   color: var(--fg);
   background: var(--bg);
@@ -195,8 +211,18 @@ a {
   transition: opacity var(--transition);
 }
 
-a:hover {
-  opacity: 0.6;
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    opacity: 0.6;
+  }
+}
+
+/* Keyboard focus */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--mono8);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Selection */
@@ -518,12 +544,17 @@ footer .footer-right {
   background: var(--bg);
   font-family: var(--font-ui);
   transform: translateX(-100%);
-  transition: transform var(--transition-med);
+  /* visibility flips after the slide-out so closed content is neither
+     visible nor keyboard-reachable */
+  visibility: hidden;
+  transition: transform var(--transition-med), visibility 0s 320ms;
   z-index: 100;
 }
 
 .sb-root.is-open {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform var(--transition-med), visibility 0s;
 }
 
 .sb-resize-handle {
@@ -562,6 +593,62 @@ footer .footer-right {
 .sb-root.is-open .sb-section > *:nth-child(9) { transition-delay: 320ms; }
 .sb-root.is-open .sb-section > *:nth-child(10) { transition-delay: 345ms; }
 .sb-root.is-open .sb-section > *:nth-child(11) { transition-delay: 370ms; }
+
+/* Collapsed dial rail on the page edge (home only) */
+.sb-rail {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 14px 14px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 80;
+  transition: opacity var(--transition);
+}
+
+.sb-rail.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sb-rail-tick {
+  display: block;
+  width: 8px;
+  height: 1px;
+  background: var(--mono4);
+  transition: background var(--transition), width var(--transition);
+}
+
+.sb-rail-tick.is-stop {
+  width: 14px;
+  background: var(--mono6);
+}
+
+.sb-rail-tick.is-active {
+  width: 18px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sb-rail:hover .sb-rail-tick {
+    background: var(--mono6);
+  }
+
+  .sb-rail:hover .sb-rail-tick.is-stop {
+    background: var(--mono8);
+  }
+
+  .sb-rail:hover .sb-rail-tick.is-active {
+    background: var(--accent);
+  }
+}
 
 /* Toggle tooltip on hover (sidebar-002 style) */
 @media (hover: hover) and (pointer: fine) {
@@ -692,7 +779,7 @@ footer .footer-right {
   align-items: center;
   gap: 8px;
   margin-left: 8px;
-  padding: 9px 8px 9px 18px;
+  padding: 12px 8px 12px 18px;
   font-size: 15px;
   color: var(--fg);
   user-select: none;
@@ -895,8 +982,12 @@ footer .footer-right {
   padding: var(--page-top) 24px var(--gap-8x);
 }
 
+/* One display voice: the name joins the Newsreader system */
 .one-page h1 {
-  font-size: 32px;
+  font-family: var(--font-essay);
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   margin-bottom: 24px;
 }
 
@@ -951,6 +1042,8 @@ footer .footer-right {
 }
 
 .home-links a {
+  display: inline-block;
+  padding: 10px 0;
   font-size: 14px;
   color: var(--mono9);
 }
@@ -1229,7 +1322,22 @@ footer .footer-right {
   margin-top: 64px;
 }
 
+.essay-footer-nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.essay-adjacent {
+  display: flex;
+  gap: 20px;
+}
+
 .essay-back {
+  display: inline-block;
+  padding: 8px 0;
   font-size: 14px;
   color: var(--mono8);
 }
@@ -1237,6 +1345,35 @@ footer .footer-right {
 .essay-back:hover {
   color: var(--fg);
   opacity: 1;
+}
+
+/* One-page footer */
+.op-footer {
+  margin-top: var(--gap-2x);
+}
+
+.op-footer p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--mono8);
+}
+
+.op-footer a {
+  color: var(--mono8);
+  padding: 8px 0;
+}
+
+.op-footer a:hover {
+  color: var(--fg);
+  opacity: 1;
+}
+
+.op-footer-sep {
+  color: var(--mono5);
 }
 
 /* ─── Information diet ── */

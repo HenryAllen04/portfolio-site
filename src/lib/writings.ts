@@ -4,11 +4,34 @@
  * Add an entry here and create the matching page to publish.
  */
 
+import type { Metadata } from "next";
+
 export interface Writing {
   slug: string;
   title: string;
   date: string; // ISO yyyy-mm-dd
   summary?: string;
+}
+
+const SITE_URL = "https://henryallen.dev";
+
+/** Per-essay metadata, exported from each essay route's server layout. */
+export function essayMetadata(slug: string): Metadata {
+  const w = writings.find((x) => x.slug === slug);
+  if (!w) return {};
+  const title = `${w.title} — Henry Allen`;
+  return {
+    title,
+    description: w.summary,
+    openGraph: {
+      title,
+      description: w.summary,
+      type: "article",
+      url: `${SITE_URL}/writing/${w.slug}`,
+      siteName: "Henry Allen",
+    },
+    twitter: { card: "summary", title, description: w.summary },
+  };
 }
 
 export const writings: Writing[] = [

@@ -145,6 +145,23 @@ export default function Home() {
             </div>
           ))}
         </section>
+
+        <footer className="op-footer">
+          <AnimatedDivider />
+          <ScrollFade threshold={0.1}>
+            <p>
+              <a href="mailto:Henry01Allen@gmail.com" className="link-reveal">
+                Henry01Allen@gmail.com
+              </a>
+              <span className="op-footer-sep">·</span>
+              <a href="/rss.xml" className="link-reveal">
+                RSS
+              </a>
+              <span className="op-footer-sep">·</span>
+              <span>Set in Söhne, Inter &amp; Newsreader</span>
+            </p>
+          </ScrollFade>
+        </footer>
       </Intro>
     </main>
   );

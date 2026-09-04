@@ -12,6 +12,7 @@ export default function AgainstTemplates() {
     <Essay
       title="Against Templates"
       date="2026-09-04"
+      slug="against-templates"
       intro={[
         <p key={1}>
           Templates remove the unique context and alpha that lives in a piece
