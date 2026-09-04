@@ -1,15 +1,16 @@
 "use client";
 
 /**
- * Purpose: Overlay navigation. A toggle in the top-left slides the sidebar
- * over the page. On the one-page home, a scrollspy tracks which section is
- * in view and the active (orange) indicator moves between Me, Writings and
- * Information Diet.
+ * Purpose: Overlay navigation. The animated toggle (from Vultur-ai/ontology)
+ * slides the sidebar over the page — same background as the page, no
+ * darkening. Clicking the page (outside the sidebar) dismisses it;
+ * navigating between pieces keeps it open. On the one-page home a
+ * scrollspy moves the orange active indicator between sections.
  */
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { PanelLeft, X } from "lucide-react";
+import { SidebarToggleIcon } from "./SidebarToggleIcon";
 import {
   Sidebar,
   SidebarContent,
@@ -41,28 +42,24 @@ export default function SiteSidebar() {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("me");
 
-  // Close the overlay on route navigation
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  // Scrollspy — only meaningful on the one-page home
+  // Scrollspy — only meaningful on the one-page home. Deterministic:
+  // active = last section whose top has crossed a line 35% down the
+  // viewport (an IntersectionObserver misfires here because the long
+  // final section overlaps the band at the same time as short ones).
   useEffect(() => {
     if (pathname !== "/") return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      // Active = section crossing a band in the upper-middle of the viewport
-      { rootMargin: "-30% 0px -55% 0px" },
-    );
-    SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
+    const onScroll = () => {
+      const line = window.innerHeight * 0.35;
+      let current: string = SECTIONS[0].id;
+      for (const { id } of SECTIONS) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
+      }
+      setActiveSection(current);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
   const active = pathname.startsWith("/writing")
@@ -79,7 +76,7 @@ export default function SiteSidebar() {
         aria-label={open ? "Close navigation" : "Open navigation"}
         onClick={() => setOpen((v) => !v)}
       >
-        {open ? <X size={18} /> : <PanelLeft size={18} />}
+        <SidebarToggleIcon isOpen={open} className="sb-toggle-icon" />
       </button>
 
       {open && (
@@ -103,7 +100,6 @@ export default function SiteSidebar() {
                 href={`/#${id}`}
                 label={label}
                 isActive={active === id}
-                onClick={() => setOpen(false)}
               />
             ))}
           </SidebarSection>

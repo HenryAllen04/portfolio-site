@@ -517,7 +517,6 @@ footer .footer-right {
   flex-direction: column;
   background: var(--bg);
   font-family: var(--font-ui);
-  border-right: 1px solid var(--mono3);
   transform: translateX(-100%);
   transition: transform var(--transition-med);
   z-index: 100;
@@ -779,31 +778,31 @@ footer .footer-right {
 /* Nav toggle + backdrop */
 .sb-toggle {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 16px;
+  left: 16px;
   z-index: 110;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius);
-  border: 1px solid var(--mono3);
-  background: var(--bg);
-  color: var(--mono9);
+  border: none;
+  background: none;
+  padding: 0;
   cursor: pointer;
-  transition: border-color var(--transition), color var(--transition);
 }
 
-.sb-toggle:hover {
-  border-color: var(--mono5);
-  color: var(--fg);
+.sb-toggle-icon {
+  width: 26px;
+  height: 26px;
 }
 
+/* Invisible click-catcher: clicking the page dismisses the sidebar
+   without darkening anything */
 .sb-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: transparent;
   z-index: 90;
 }
 
@@ -1079,6 +1078,48 @@ footer .footer-right {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--mono8);
+}
+
+.essay-media {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.essay-media img {
+  flex: 1 1 300px;
+  min-width: 0;
+  max-width: 400px;
+  border-radius: var(--radius-l);
+  object-fit: cover;
+}
+
+.essay-media iframe {
+  flex: 1 1 300px;
+  min-width: 0;
+  max-width: 400px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: none;
+  border-radius: var(--radius-l);
+}
+
+.essay-media-caption {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.essay-media-caption a {
+  font-family: var(--font-essay);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--mono8);
+}
+
+.essay-media-caption a:hover {
+  color: var(--fg);
+  opacity: 1;
 }
 
 .essay-end {

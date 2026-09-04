@@ -19,4 +19,12 @@ export const writings: Writing[] = [
     summary:
       "Templates recycle past thinking. The alpha lives in the context they throw away.",
   },
+  {
+    // TODO(henry): confirm the actual hackathon date
+    slug: "the20hr-co",
+    title: "The20hr.co",
+    date: "2025-06-14",
+    summary:
+      "Build, launch, sell in 20 hours — Europe's fastest startup exit.",
+  },
 ];
