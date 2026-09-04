@@ -55,7 +55,7 @@ export function SidebarToggleIcon({
       <path
         d={OUTER}
         fill="var(--bg)"
-        stroke="var(--mono6)"
+        stroke="var(--mono8)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -67,7 +67,7 @@ export function SidebarToggleIcon({
         y={COLUMN.y}
         height={COLUMN.height}
         rx={COLUMN.rx}
-        fill="var(--mono4)"
+        fill="var(--mono6)"
         initial={false}
         animate={{
           width: isOpen ? COLUMN.openWidth : COLUMN.closedWidth,

@@ -215,10 +215,11 @@ export const SidebarItem = memo(function SidebarItem({
     if (el && container) {
       const elRect = el.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
+      // Pill starts clear of the dash rail (dashes reach 26px on hover)
       setHovered(href, {
         top: elRect.top - containerRect.top,
         height: elRect.height,
-        left: 25,
+        left: 30,
       });
     } else {
       setHovered(href);

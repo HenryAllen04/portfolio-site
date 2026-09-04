@@ -533,7 +533,19 @@ footer .footer-right {
 .sb-header {
   flex-shrink: 0;
   /* Clear the fixed toggle button in the top-left */
-  padding: 26px 16px 8px 64px;
+  padding: 28px 16px 10px 72px;
+}
+
+/* The brand doesn't ride the slide-in (it would fly through the toggle
+   icon) — it fades in after the panel has settled */
+.sb-brand-name {
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out-quad);
+}
+
+.sb-root.is-open .sb-brand-name {
+  opacity: 1;
+  transition-delay: 240ms;
 }
 
 .sb-brand {
@@ -601,6 +613,8 @@ footer .footer-right {
 
 .sb-item {
   position: relative;
+  /* Breathing room between dial entries so dash clusters don't merge */
+  margin: 7px 0;
 }
 
 .sb-active-bar {
@@ -652,8 +666,8 @@ footer .footer-right {
   align-items: center;
   gap: 8px;
   margin-left: 8px;
-  padding: 6px 8px 6px 16px;
-  font-size: 14px;
+  padding: 9px 8px 9px 18px;
+  font-size: 15px;
   color: var(--fg);
   user-select: none;
 }
@@ -793,8 +807,8 @@ footer .footer-right {
 }
 
 .sb-toggle-icon {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
 }
 
 /* Invisible click-catcher: clicking the page dismisses the sidebar
