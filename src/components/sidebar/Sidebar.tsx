@@ -248,7 +248,7 @@ export const SidebarItem = memo(function SidebarItem({
           layoutId="sb-active-bar"
           className="sb-active-bar"
           animate={{ width: 30 }}
-          transition={{ type: "spring", stiffness: 800, damping: 40 }}
+          transition={{ type: "spring", stiffness: 1100, damping: 50 }}
         />
       )}
 

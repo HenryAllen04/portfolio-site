@@ -61,9 +61,9 @@ function SubItems({
               animate={{ opacity: 1, x: 0 }}
               transition={{
                 type: "spring",
-                stiffness: 500,
-                damping: 32,
-                delay: 0.05 + i * 0.045,
+                stiffness: 260,
+                damping: 30,
+                delay: 0.1 + i * 0.07,
               }}
             >
               <Link
@@ -87,8 +87,12 @@ function SubItems({
 export default function SiteSidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // Fractional scroll position across sections: 0 = Me … 2 = Information Diet
-  const [progress, setProgress] = useState(0);
+  // Integer dial stop — updated ONLY when the stop actually changes, so
+  // scrolling never re-renders the sidebar needlessly (no jitter)
+  const [scrollStop, setScrollStop] = useState(0);
+  // Drill-down is click-driven, never scroll-driven: scrolling moves the
+  // indicator, only a click changes the sidebar's layout
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   // Keyboard: S toggles, Escape closes (as in unlumen sidebar-002)
   useEffect(() => {
@@ -130,11 +134,17 @@ export default function SiteSidebar() {
           break;
         }
       }
-      setProgress(p);
+      const stop = Math.round(p * STOPS_PER_GAP);
+      setScrollStop((prev) => (prev === stop ? prev : stop));
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, [pathname]);
+
+  // Arriving on an essay page unfolds Writings (a navigation, not a scroll)
+  useEffect(() => {
+    if (pathname.startsWith("/writing")) setExpanded(1);
   }, [pathname]);
 
   // Hash links don't re-fire when the hash is unchanged — scroll manually
@@ -156,14 +166,7 @@ export default function SiteSidebar() {
   const activeStop = onEssayPage
     ? 1 * STOPS_PER_GAP
     : pathname === "/"
-      ? Math.round(progress * STOPS_PER_GAP)
-      : -1;
-  // Which piece you're inside (you stay "in" a section until the next
-  // one's top crosses the line) — drives the drill-down
-  const activeMain = onEssayPage
-    ? 1
-    : pathname === "/"
-      ? Math.floor(progress + 0.001)
+      ? scrollStop
       : -1;
 
   const totalStops = (SECTIONS.length - 1) * STOPS_PER_GAP + 1;
@@ -249,9 +252,12 @@ export default function SiteSidebar() {
                     href={`/#${id}`}
                     label={label}
                     isActive={activeStop === i * STOPS_PER_GAP}
-                    onClick={goTo(id)}
+                    onClick={(e) => {
+                      goTo(id)(e);
+                      setExpanded(subItems.length > 0 ? i : null);
+                    }}
                   />
-                  {activeMain === i && subItems.length > 0 && (
+                  {expanded === i && subItems.length > 0 && (
                     <SubItems items={subItems} />
                   )}
                   {i < SECTIONS.length - 1 &&
@@ -266,8 +272,8 @@ export default function SiteSidebar() {
                               animate={{ width: 20 }}
                               transition={{
                                 type: "spring",
-                                stiffness: 800,
-                                damping: 40,
+                                stiffness: 1100,
+                                damping: 50,
                               }}
                             />
                           )}
