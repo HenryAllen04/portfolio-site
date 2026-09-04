@@ -207,7 +207,8 @@ export const SidebarItem = memo(function SidebarItem({
         ? 1
         : 0.3
       : 0.55;
-  const x = isActive ? 8 : isHovered ? 6 : 0;
+  // Active shift clears the 30px indicator bar with room to breathe
+  const x = isActive ? 18 : isHovered ? 6 : 0;
 
   const handleMouseEnter = () => {
     const el = itemRef.current;

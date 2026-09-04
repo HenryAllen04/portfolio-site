@@ -746,17 +746,18 @@ footer .footer-right {
   background: var(--mono6);
 }
 
-/* Sidebar drill-down: children of the active piece — mini dial language */
+/* Sidebar drill-down: children of the active piece — mini dial language.
+   Sub-dashes sit on the same rail line as the main ticks. */
 .sb-subitems {
   list-style: none;
   margin: 0;
-  padding: 2px 0 6px 14px;
+  padding: 6px 0 10px;
 }
 
 .sb-subitem {
   position: relative;
   display: block;
-  padding: 8px 8px 8px 24px;
+  padding: 8px 8px 8px 34px;
   font-size: 13px;
   color: var(--mono9);
   transition: color var(--transition), transform var(--transition);
@@ -764,9 +765,9 @@ footer .footer-right {
 
 .sb-subitem-dash {
   position: absolute;
-  left: 0;
+  left: 4px;
   top: 50%;
-  width: 10px;
+  width: 12px;
   height: 1px;
   background: var(--mono5);
   transition: width var(--transition), background var(--transition),
@@ -780,16 +781,17 @@ footer .footer-right {
 }
 
 .sb-subitem:hover .sb-subitem-dash {
-  width: 15px;
+  width: 17px;
   background: var(--mono7);
 }
 
 .sb-subitem.is-active {
   color: var(--fg);
+  transform: translateX(4px);
 }
 
 .sb-subitem.is-active .sb-subitem-dash {
-  width: 17px;
+  width: 20px;
   height: 1.8px;
   border-radius: 999px;
   background: var(--accent);
