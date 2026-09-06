@@ -67,13 +67,18 @@ export const dietSections: DietSection[] = [
   {
     id: "diet-llm-wiki",
     title: "LLM Wiki",
-    // TODO(henry): add the link to the open-source repo ("try it for
-    // yourself here!") — add an item with an `href` once you have the URL.
     blurb: [
       "Thought I'd share this one here too! I have a personal knowledge base of everything I enjoy or come across online — made with Obsidian clippings and ingested into frameworks by Claude.",
-      "Created by Andrej Karpathy — it's open source, try it for yourself!",
+      "Created by Andrej Karpathy — it's open source, try it for yourself:",
     ],
-    items: [],
+    items: [
+      {
+        title: "The idea file",
+        by: "Andrej Karpathy",
+        note: "The viral tweet + idea file — hand it to your agent and build your own.",
+        href: "https://x.com/karpathy/status/2040470801506541998",
+      },
+    ],
   },
   {
     id: "diet-podcasts",
