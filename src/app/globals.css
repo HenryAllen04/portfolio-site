@@ -810,8 +810,9 @@ footer .footer-right {
   background: var(--accent);
 }
 
-/* Scroll-position indicator — dark; orange belongs to the clicked
-   sub-thing */
+/* Scroll-position indicator — orange for the piece you're on. It goes
+   dark only once you've drilled in and selected a sub-thing (which then
+   carries the orange). */
 .sb-active-bar {
   pointer-events: none;
   position: absolute;
@@ -821,6 +822,10 @@ footer .footer-right {
   height: 1.8px;
   transform: translateY(-50%);
   border-radius: 999px;
+  background: var(--accent);
+}
+
+.sb-root.sub-selected .sb-active-bar {
   background: var(--fg);
 }
 

@@ -296,7 +296,15 @@ export default function SiteSidebar() {
         </button>
       )}
 
-      <Sidebar defaultWidth={260} className={open ? "is-open" : undefined}>
+      <Sidebar
+        defaultWidth={260}
+        className={
+          (open ? "is-open" : "") +
+          // A sub-thing is the active one — on the home page that's a
+          // clicked diet section; on an essay page it's the essay itself
+          (selectedSub || onEssayPage ? " sub-selected" : "")
+        }
+      >
         <SidebarContent>
           <SidebarSection>
             {SECTIONS.map(({ id, label }, i) => {
