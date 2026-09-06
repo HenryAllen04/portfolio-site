@@ -1120,6 +1120,31 @@ footer .footer-right {
   font-family: var(--font-essay);
 }
 
+.home-facts {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 56ch;
+}
+
+.home-facts li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--mono9);
+}
+
+.home-facts li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--mono6);
+}
+
 .home-links {
   list-style: none;
   display: flex;
@@ -1483,8 +1508,14 @@ footer .footer-right {
 
 .diet-blurb {
   font-size: 14px;
+  line-height: 1.7;
   color: var(--mono9);
   margin: -12px 0 24px;
+  max-width: 60ch;
+}
+
+.diet-blurb + .diet-blurb {
+  margin-top: -10px;
 }
 
 .diet-year-block {

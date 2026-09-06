@@ -17,6 +17,18 @@ const LINKS = [
   { label: "Email", href: "mailto:Henry01Allen@gmail.com" },
 ];
 
+const FACTS = [
+  "21 years old, British — yes I have the terrible accent and the great humour.",
+  "Spent time recruiting for AI labs.",
+  "Won many hackathons; also sold a company in a hackathon.",
+  "I now enjoy getting to judge events like TreeHacks at Stanford!",
+  "First company at 17.",
+  "Never went to university.",
+  "Got a job as an AI engineer at 19.",
+  "I consider myself an artist in the Rick Rubin fashion.",
+  "ADHD.",
+];
+
 function formatDate(iso: string) {
   return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", {
     month: "short",
@@ -61,21 +73,29 @@ export default function Home() {
 
   return (
     <main className="one-page">
-      <Intro storageKey="home-intro" count={3}>
+      <Intro storageKey="home-intro" count={4}>
         {/* ─── Me ─── */}
         <section id="me" className="op-section op-hero">
           <IntroItem index={0} as="h1">
             Henry Allen
           </IntroItem>
           <IntroItem index={1}>
-            {/* TODO(henry): replace with the rewritten half-paragraph */}
             <p className="home-bio">
-              <em>Building AI solutions.</em> Self-taught AI engineer turning
-              wild ideas into scalable products. Currently building Vultur to
-              make relationship capital visible.
+              <em>Welcome to my storage unit</em> — only that it&apos;s
+              designed to be a glass box. The content I share here aims to be
+              the purest expression of myself. I&apos;m currently enthralled by
+              how shared opportunity will evolve; I&apos;m building Vultur to
+              steer this.
             </p>
           </IntroItem>
           <IntroItem index={2}>
+            <ul className="home-facts">
+              {FACTS.map((fact) => (
+                <li key={fact}>{fact}</li>
+              ))}
+            </ul>
+          </IntroItem>
+          <IntroItem index={3}>
             <ul className="home-links">
               {LINKS.map((link) => (
                 <li key={link.label}>
@@ -125,10 +145,12 @@ export default function Home() {
           </ScrollFade>
           <ScrollFade>
             <p className="op-lede">
-              {/* TODO(henry): link the LLM wiki if/when it's public */}
-              <em>You are what you consume.</em> Everything I take in ends up
-              in my LLM wiki — a personal knowledge base of what I&apos;ve
-              read, heard, and learned.
+              <em>
+                Sometimes the best way to understand a person is from what they
+                choose to absorb.
+              </em>{" "}
+              Here&apos;s what I&apos;ve read, what I love to listen to, and
+              what I choose to learn.
             </p>
           </ScrollFade>
 
@@ -136,9 +158,15 @@ export default function Home() {
             <div key={section.id} id={section.id} className="diet-section-block">
               <ScrollFade threshold={0.05}>
                 <h3 className="diet-section-title">{section.title}</h3>
-                {section.blurb && (
-                  <p className="diet-blurb">{section.blurb}</p>
-                )}
+                {section.blurb &&
+                  (Array.isArray(section.blurb)
+                    ? section.blurb
+                    : [section.blurb]
+                  ).map((para) => (
+                    <p key={para} className="diet-blurb">
+                      {para}
+                    </p>
+                  ))}
               </ScrollFade>
               {section.groupByYear ? (
                 [...new Set(section.items.map((b) => b.year))]
@@ -157,7 +185,7 @@ export default function Home() {
                       </div>
                     </ScrollFade>
                   ))
-              ) : (
+              ) : section.items.length > 0 ? (
                 <ScrollFade threshold={0.05}>
                   <ul className="diet-grid">
                     {section.items.map((item) => (
@@ -165,7 +193,7 @@ export default function Home() {
                     ))}
                   </ul>
                 </ScrollFade>
-              )}
+              ) : null}
             </div>
           ))}
         </section>

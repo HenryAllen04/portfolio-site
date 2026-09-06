@@ -39,6 +39,6 @@ Append to `src/lib/diet.ts` — instructions are at the top of that file.
 Books auto-group by year; new sections auto-appear in the sidebar.
 
 ## Content that is Henry's to write (leave TODOs, don't invent)
-- Home bio sentence (`TODO(henry)` in `src/app/page.tsx`)
-- Real diet entries (current ones are placeholders)
+- Real book entries (current ones are placeholders; podcasts/courses are real)
+- LLM wiki repo link (`TODO(henry)` in `src/lib/diet.ts`)
 - The20hr.co exact date (`TODO(henry)` in `src/lib/writings.ts`)

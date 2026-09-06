@@ -12,8 +12,9 @@
  *            in the sidebar drill-down automatically.
  *
  * Order within a year/section = the order written here.
- * NOTE: every entry below is a placeholder shaping the layout until
- * Henry pours in the real log (~20 books, real courses, etc.).
+ * NOTE: the BOOK entries below are placeholders shaping the layout until
+ * Henry pours in the real log (~20 books). Podcasts and design courses
+ * are real.
  */
 
 export interface DietItem {
@@ -30,8 +31,8 @@ export interface DietItem {
 export interface DietSection {
   id: string;
   title: string;
-  /** Optional one-liner under the section heading. */
-  blurb?: string;
+  /** Optional intro under the section heading — an array renders as multiple paragraphs. */
+  blurb?: string | string[];
   groupByYear?: boolean;
   items: DietItem[];
 }
@@ -40,6 +41,8 @@ export const dietSections: DietSection[] = [
   {
     id: "diet-books",
     title: "Books",
+    blurb:
+      "I mainly care for biographies and history. “History is but the biography of great men” — Thomas Carlyle — so really I only care to read about stories of greatness. Everything else bores me.",
     groupByYear: true,
     items: [
       { title: "The Lessons of History", by: "Will & Ariel Durant", year: 2026, note: "Placeholder — swap in your real books and notes." },
@@ -62,27 +65,47 @@ export const dietSections: DietSection[] = [
     ],
   },
   {
+    id: "diet-llm-wiki",
+    title: "LLM Wiki",
+    // TODO(henry): add the link to the open-source repo ("try it for
+    // yourself here!") — add an item with an `href` once you have the URL.
+    blurb: [
+      "Thought I'd share this one here too! I have a personal knowledge base of everything I enjoy or come across online — made with Obsidian clippings and ingested into frameworks by Claude.",
+      "Created by Andrej Karpathy — it's open source, try it for yourself!",
+    ],
+    items: [],
+  },
+  {
     id: "diet-podcasts",
     title: "Podcasts",
+    blurb: [
+      "Learning to enjoy a podcast was one of the habits I picked up as a teenager that dramatically changed my life. I would drive to college at seventeen — an hour there and an hour back — and I replaced music with podcasts about health, entrepreneurship, philosophy. This period of my life gave me an acute awareness of the world's realities that I could not shy away from.",
+      "My taste is very similar today, although I only really have time to listen to Founders and like to take notes.",
+    ],
     items: [
       {
         title: "Founders",
         by: "David Senra",
-        note: "Placeholder — biographies of history's greatest entrepreneurs.",
         href: "https://www.founderspodcast.com/",
       },
-      { title: "Lex Fridman Podcast", by: "Lex Fridman" },
-      { title: "20VC", by: "Harry Stebbings" },
+      { title: "Naval", by: "Naval Ravikant" },
+      { title: "Uncapped", by: "Jack Altman" },
+      { title: "All-In", by: "Chamath, Jason, Sacks & Friedberg" },
+      { title: "Huberman Lab", by: "Andrew Huberman" },
+      { title: "The Diary of a CEO", by: "Steven Bartlett" },
     ],
   },
   {
     id: "diet-design-courses",
     title: "Design Courses",
+    blurb: [
+      "Studying what makes design great develops judgement, which creates my gut intuition, which is my taste. These models will never take my taste away from me!!",
+      "Two courses I love, which are also required reading for my engineers.",
+    ],
     items: [
       {
         title: "Animations on the Web",
         by: "Emil Kowalski",
-        note: "Placeholder — add the design courses you rate.",
         href: "https://animations.dev/",
       },
       { title: "Interface Craft", by: "Josh Puckett" },
@@ -91,4 +114,4 @@ export const dietSections: DietSection[] = [
 ];
 
 export const dietIntro =
-  "You are what you consume. Everything I take in ends up in my LLM wiki — a personal knowledge base of what I've read, heard, and learned.";
+  "Sometimes the best way to understand a person is from what they choose to absorb. Here's what I've read, what I love to listen to, and what I choose to learn.";
