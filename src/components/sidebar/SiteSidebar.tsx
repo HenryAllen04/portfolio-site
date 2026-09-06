@@ -40,6 +40,23 @@ const SECTIONS = [
 const TICKS_PER_GAP = 5;
 const STOPS_PER_GAP = TICKS_PER_GAP + 1;
 
+// Viewport-y where a section is considered "arrived". Used as BOTH the
+// scroll landing offset and the scrollspy line, so clicking a piece
+// always parks its top exactly on the line → its label lights (not the
+// first tick below it).
+const ARRIVE_LINE = 96;
+
+/** Scroll to a target y. Native smooth (compositor-driven, so it isn't
+ *  throttled the way a rAF tween is); the CSS scroll-behavior that used
+ *  to break programmatic scrollTo has been removed. Instant under
+ *  prefers-reduced-motion. */
+function smoothScrollTo(top: number) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const target = Math.max(0, Math.min(top, max));
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: target, behavior: reduce ? "auto" : "smooth" });
+}
+
 interface SubItem {
   label: string;
   href: string;
@@ -110,6 +127,9 @@ export default function SiteSidebar() {
   // Drill-down is click-driven, never scroll-driven: scrolling moves the
   // indicator, only a click changes what the ticks display
   const [expanded, setExpanded] = useState<number | null>(null);
+  // The sub-thing last clicked into — carries the orange; the scroll
+  // indicator itself is black
+  const [selectedSub, setSelectedSub] = useState<string | null>(null);
 
   // Keyboard: S toggles, Escape closes (as in unlumen sidebar-002)
   useEffect(() => {
@@ -134,10 +154,7 @@ export default function SiteSidebar() {
   useEffect(() => {
     if (pathname !== "/") return;
     const onScroll = () => {
-      // Just below where sections land after a dial click
-      // (scroll-margin-top: 96px), so arriving at a section lights its
-      // labelled stop exactly
-      const line = 120;
+      const line = ARRIVE_LINE;
       const tops = SECTIONS.map(
         ({ id }) =>
           document.getElementById(id)?.getBoundingClientRect().top ?? Infinity,
@@ -151,7 +168,24 @@ export default function SiteSidebar() {
           break;
         }
       }
-      const stop = Math.round(p * STOPS_PER_GAP);
+      // Labels get a capture zone: landing on a section (which puts the
+      // line a hair past its top) lights the label, not the first tick
+      const sec = Math.min(Math.floor(p), SECTIONS.length - 1);
+      const frac = p - sec;
+      let stop: number;
+      if (frac < 0.1) {
+        stop = sec * STOPS_PER_GAP;
+      } else if (frac > 0.92) {
+        stop = (sec + 1) * STOPS_PER_GAP;
+      } else {
+        stop =
+          sec * STOPS_PER_GAP +
+          1 +
+          Math.min(
+            TICKS_PER_GAP - 1,
+            Math.floor(((frac - 0.1) / 0.82) * TICKS_PER_GAP),
+          );
+      }
       setScrollStop((prev) => (prev === stop ? prev : stop));
     };
     onScroll();
@@ -164,23 +198,19 @@ export default function SiteSidebar() {
     if (pathname.startsWith("/writing")) setExpanded(1);
   }, [pathname]);
 
-  // Hash links don't re-fire when the hash is unchanged — scroll manually
-  // so a dial click always answers, then keep the URL in sync. The scroll
-  // starts two frames later: Next's patched replaceState and the label
-  // reveal both do work in the click frame that cancels a smooth
-  // scrollIntoView started synchronously.
+  // Dial clicks scroll to the section. We compute the target and use
+  // window.scrollTo — element.scrollIntoView() is a no-op in this app
+  // (some combination of the fixed overlay + Next patching), whereas
+  // scrollTo works. -88px keeps the heading clear of the top edge.
   const goTo = useCallback(
     (id: string): React.MouseEventHandler<HTMLAnchorElement> =>
       (e) => {
         if (pathname !== "/") return; // real navigation to /#id
         e.preventDefault();
-        history.replaceState(null, "", `/#${id}`);
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() =>
-            document
-              .getElementById(id)
-              ?.scrollIntoView({ behavior: "smooth", block: "start" }),
-          ),
+        const el = document.getElementById(id);
+        if (!el) return;
+        smoothScrollTo(
+          window.scrollY + el.getBoundingClientRect().top - ARRIVE_LINE,
         );
       },
     [pathname],
@@ -215,7 +245,11 @@ export default function SiteSidebar() {
       return dietSections.map((s) => ({
         label: s.title,
         href: `/#${s.id}`,
-        onClick: goTo(s.id),
+        isActive: selectedSub === `/#${s.id}`,
+        onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
+          goTo(s.id)(e);
+          setSelectedSub(`/#${s.id}`);
+        },
       }));
     }
     return [];
@@ -277,6 +311,8 @@ export default function SiteSidebar() {
                     onClick={(e) => {
                       goTo(id)(e);
                       setExpanded(subItems.length > 0 ? i : null);
+                      // Clicking a main piece hands the orange back
+                      setSelectedSub(null);
                     }}
                   />
                   {/* The tick run below this piece — always rendered, so

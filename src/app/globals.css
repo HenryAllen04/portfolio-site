@@ -136,11 +136,9 @@
   box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
+/* Smooth scrolling is driven in JS (dial clicks), not CSS: a CSS
+   scroll-behavior:smooth on <html> silently breaks programmatic
+   window.scrollTo in some Chrome builds. */
 
 /* Reduced motion: collapse all animation (manifesto approach) */
 @media (prefers-reduced-motion: reduce) {
@@ -642,7 +640,7 @@ footer .footer-right {
   width: 22px;
   height: 2px;
   border-radius: 1px;
-  background: var(--accent);
+  background: var(--fg);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -655,7 +653,7 @@ footer .footer-right {
   }
 
   .sb-rail:hover .sb-rail-tick.is-active {
-    background: var(--accent);
+    background: var(--fg);
   }
 }
 
@@ -812,6 +810,8 @@ footer .footer-right {
   background: var(--accent);
 }
 
+/* Scroll-position indicator — dark; orange belongs to the clicked
+   sub-thing */
 .sb-active-bar {
   pointer-events: none;
   position: absolute;
@@ -821,7 +821,7 @@ footer .footer-right {
   height: 1.8px;
   transform: translateY(-50%);
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--fg);
 }
 
 .sb-dash {
