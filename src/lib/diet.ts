@@ -12,9 +12,6 @@
  *            in the sidebar drill-down automatically.
  *
  * Order within a year/section = the order written here.
- * NOTE: the BOOK entries below are placeholders shaping the layout until
- * Henry pours in the real log (~20 books). Podcasts and design courses
- * are real.
  */
 
 export interface DietItem {
@@ -33,6 +30,8 @@ export interface DietSection {
   title: string;
   /** Optional intro under the section heading — an array renders as multiple paragraphs. */
   blurb?: string | string[];
+  /** Optional small link rendered under the blurb (e.g. Goodreads). */
+  link?: { label: string; href: string };
   groupByYear?: boolean;
   items: DietItem[];
 }
@@ -43,25 +42,35 @@ export const dietSections: DietSection[] = [
     title: "Books",
     blurb:
       "I mainly care for biographies and history. “History is but the biography of great men” — Thomas Carlyle — so really I only care to read about stories of greatness. Everything else bores me.",
+    link: {
+      label: "Follow along on Goodreads",
+      href: "https://www.goodreads.com/henryallen",
+    },
     groupByYear: true,
     items: [
-      { title: "The Lessons of History", by: "Will & Ariel Durant", year: 2026, note: "Placeholder — swap in your real books and notes." },
-      { title: "Zero to One", by: "Peter Thiel", year: 2026 },
-      { title: "Shoe Dog", by: "Phil Knight", year: 2026 },
-      { title: "The Hard Thing About Hard Things", by: "Ben Horowitz", year: 2026 },
-      { title: "Meditations", by: "Marcus Aurelius", year: 2026 },
-      { title: "The Almanack of Naval Ravikant", by: "Eric Jorgenson", year: 2026 },
-      { title: "The Psychology of Money", by: "Morgan Housel", year: 2026 },
-      { title: "Steve Jobs", by: "Walter Isaacson", year: 2026 },
-      { title: "Deep Work", by: "Cal Newport", year: 2026 },
-      { title: "The Courage to Be Disliked", by: "Kishimi & Koga", year: 2026 },
-      { title: "Influence", by: "Robert Cialdini", year: 2025, note: "Placeholder — the mechanics of persuasion." },
-      { title: "Atomic Habits", by: "James Clear", year: 2025 },
-      { title: "The Mom Test", by: "Rob Fitzpatrick", year: 2025 },
-      { title: "Thinking, Fast and Slow", by: "Daniel Kahneman", year: 2024 },
-      { title: "The 48 Laws of Power", by: "Robert Greene", year: 2024 },
-      { title: "Sapiens", by: "Yuval Noah Harari", year: 2023 },
-      { title: "Rich Dad Poor Dad", by: "Robert Kiyosaki", year: 2023 },
+      {
+        title: "The Founders",
+        by: "Jimmy Soni",
+        year: 2026,
+        note: "I reached out to someone mentioned in the book and got a personal tour of where the Confinity and X.com offices used to be — walking down University Avenue in Palo Alto together.",
+      },
+      { title: "Who Is Michael Ovitz?", by: "Michael Ovitz", year: 2026 },
+      { title: "Finite and Infinite Games", by: "James P. Carse", year: 2026 },
+      { title: "The Presentation of Self in Everyday Life", by: "Erving Goffman", year: 2026 },
+      { title: "Why Fish Don't Exist", by: "Lulu Miller", year: 2026 },
+      { title: "The Book of Elon", by: "Eric Jorgenson", year: 2026 },
+      { title: "The Ancient City", by: "Numa Denis Fustel de Coulanges", year: 2026 },
+      { title: "The Algorithm", by: "Jon McNeill", year: 2026 },
+      { title: "The Creative Act", by: "Rick Rubin", year: 2026 },
+      // TODO(henry): confirm these two belong in 2025 (on the Goodreads
+      // read shelf without dates).
+      { title: "Zero to One", by: "Peter Thiel", year: 2025 },
+      { title: "The 48 Laws of Power", by: "Robert Greene", year: 2025 },
+      // TODO(henry): some of these three were read in 2024 — move those
+      // to `year: 2024` and a 2024 group will appear automatically.
+      { title: "Atomic Habits", by: "James Clear", year: 2023 },
+      { title: "The Art of War", by: "Sun Tzu", year: 2023 },
+      { title: "Meditations", by: "Marcus Aurelius", year: 2023 },
     ],
   },
   {

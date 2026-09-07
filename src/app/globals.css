@@ -1518,6 +1518,11 @@ footer .footer-right {
   margin-top: -10px;
 }
 
+.diet-section-link {
+  font-size: 13px;
+  margin: -12px 0 28px;
+}
+
 .diet-year-block {
   margin-bottom: 36px;
 }

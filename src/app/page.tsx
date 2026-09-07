@@ -167,6 +167,18 @@ export default function Home() {
                       {para}
                     </p>
                   ))}
+                {section.link && (
+                  <p className="diet-section-link">
+                    <a
+                      href={section.link.href}
+                      rel="noopener"
+                      target="_blank"
+                      className="link-reveal"
+                    >
+                      {section.link.label}
+                    </a>
+                  </p>
+                )}
               </ScrollFade>
               {section.groupByYear ? (
                 [...new Set(section.items.map((b) => b.year))]
