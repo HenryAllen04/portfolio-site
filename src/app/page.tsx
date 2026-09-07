@@ -18,7 +18,7 @@ const LINKS = [
 ];
 
 const FACTS = [
-  "21 years old, British — yes I have the terrible accent and the great humour.",
+  "21 years old, British; yes I have the terrible accent and the great humour.",
   "Spent time recruiting for AI labs.",
   "Won many hackathons; also sold a company in a hackathon.",
   "I now enjoy getting to judge events like TreeHacks at Stanford!",
@@ -26,7 +26,6 @@ const FACTS = [
   "Never went to university.",
   "Got a job as an AI engineer at 19.",
   "I consider myself an artist in the Rick Rubin fashion.",
-  "ADHD.",
 ];
 
 function formatDate(iso: string) {
@@ -81,7 +80,7 @@ export default function Home() {
           </IntroItem>
           <IntroItem index={1}>
             <p className="home-bio">
-              <em>Welcome to my storage unit</em> — only that it&apos;s
+              <em>Welcome to my storage unit</em>, only that it&apos;s
               designed to be a glass box. The content I share here aims to be
               the purest expression of myself. I&apos;m currently enthralled by
               how shared opportunity will evolve; I&apos;m building Vultur to
@@ -157,27 +156,33 @@ export default function Home() {
           {dietSections.map((section) => (
             <div key={section.id} id={section.id} className="diet-section-block">
               <ScrollFade threshold={0.05}>
-                <h3 className="diet-section-title">{section.title}</h3>
+                <div className="diet-section-heading">
+                  <h3 className="diet-section-title">{section.title}</h3>
+                  {section.link && (
+                    <a
+                      href={section.link.href}
+                      rel="noopener"
+                      target="_blank"
+                      className="diet-heading-link"
+                    >
+                      {section.link.label}
+                    </a>
+                  )}
+                </div>
                 {section.blurb &&
                   (Array.isArray(section.blurb)
                     ? section.blurb
                     : [section.blurb]
                   ).map((para) => (
-                    <p key={para} className="diet-blurb">
+                    <p key={para} className={`diet-blurb${section.blurbIsDraft ? " draft-copy" : ""}`}>
                       {para}
                     </p>
                   ))}
-                {section.link && (
-                  <p className="diet-section-link">
-                    <a
-                      href={section.link.href}
-                      rel="noopener"
-                      target="_blank"
-                      className="link-reveal"
-                    >
-                      {section.link.label}
-                    </a>
-                  </p>
+                {section.quote && (
+                  <blockquote className="diet-quote" cite={section.quote.source}>
+                    <p>“{section.quote.text}”</p>
+                    <footer><cite>{section.quote.by}</cite></footer>
+                  </blockquote>
                 )}
               </ScrollFade>
               {section.groupByYear ? (
