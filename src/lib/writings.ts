@@ -19,7 +19,7 @@ const SITE_URL = "https://henryallen.dev";
 export function essayMetadata(slug: string): Metadata {
   const w = writings.find((x) => x.slug === slug);
   if (!w) return {};
-  const title = `${w.title} — Henry Allen`;
+  const title = `${w.title} | Henry Allen`;
   return {
     title,
     description: w.summary,

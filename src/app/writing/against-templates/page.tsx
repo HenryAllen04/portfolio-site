@@ -29,13 +29,13 @@ export default function AgainstTemplates() {
         <p>
           A template optimises for the average case. It encodes the decisions
           someone else made for a problem that was almost, but not quite,
-          yours. Every default you accept is a decision you did not make —
+          yours. Every default you accept is a decision you did not make,
           and the decisions you do not make are exactly where the
           distinctiveness would have lived.
         </p>
         <p>
-          This site is built without one. The conventions it borrows — a
-          readable measure, a dated index — are borrowed because they serve
+          This site is built without one. The conventions it borrows (a
+          readable measure, a dated index) are borrowed because they serve
           the reader, not because they shipped in a starter kit.{" "}
           <strong>Everything else is a decision.</strong>
         </p>

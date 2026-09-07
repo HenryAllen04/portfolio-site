@@ -1506,6 +1506,56 @@ footer .footer-right {
   margin: 0 0 24px;
 }
 
+.diet-section-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 24px;
+}
+
+.diet-section-heading .diet-section-title {
+  margin-bottom: 0;
+}
+
+.diet-heading-link {
+  font-size: 12px;
+  color: var(--mono9);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--mono6);
+}
+
+.diet-quote {
+  margin: -8px 0 24px;
+}
+
+.diet-quote p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--mono9);
+}
+
+.diet-quote footer {
+  margin-top: 4px;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+  color: var(--mono9);
+}
+
+.diet-quote cite {
+  font-style: normal;
+}
+
+.draft-copy {
+  color: #245bcc !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .draft-copy { color: #8aafff !important; }
+}
+
 .diet-blurb {
   font-size: 14px;
   line-height: 1.7;

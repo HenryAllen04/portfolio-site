@@ -30,7 +30,10 @@ export interface DietSection {
   title: string;
   /** Optional intro under the section heading — an array renders as multiple paragraphs. */
   blurb?: string | string[];
-  /** Optional small link rendered under the blurb (e.g. Goodreads). */
+  /** Marks rewritten wording in blue for review. */
+  blurbIsDraft?: boolean;
+  quote?: { text: string; by: string; source: string };
+  /** Optional small link beside the section heading (e.g. Goodreads). */
   link?: { label: string; href: string };
   groupByYear?: boolean;
   items: DietItem[];
@@ -41,9 +44,15 @@ export const dietSections: DietSection[] = [
     id: "diet-books",
     title: "Books",
     blurb:
-      "I mainly care for biographies and history. “History is but the biography of great men” — Thomas Carlyle — so really I only care to read about stories of greatness. Everything else bores me.",
+      "I mainly care for biographies and history. I only care to read about stories of greatness. Everything else bores me.",
+    blurbIsDraft: true,
+    quote: {
+      text: "The History of the world is but the Biography of great men.",
+      by: "Thomas Carlyle",
+      source: "https://www.gutenberg.org/files/1091/1091-h/1091-h.htm#link2H_4_0002",
+    },
     link: {
-      label: "Follow along on Goodreads",
+      label: "Goodreads",
       href: "https://www.goodreads.com/henryallen",
     },
     groupByYear: true,
@@ -52,7 +61,7 @@ export const dietSections: DietSection[] = [
         title: "The Founders",
         by: "Jimmy Soni",
         year: 2026,
-        note: "I reached out to someone mentioned in the book and got a personal tour of where the Confinity and X.com offices used to be — walking down University Avenue in Palo Alto together.",
+        note: "I reached out to someone mentioned in the book and got a personal tour of where the Confinity and X.com offices used to be, walking down University Avenue in Palo Alto together.",
       },
       { title: "Who Is Michael Ovitz?", by: "Michael Ovitz", year: 2026 },
       { title: "Finite and Infinite Games", by: "James P. Carse", year: 2026 },
@@ -77,14 +86,14 @@ export const dietSections: DietSection[] = [
     id: "diet-llm-wiki",
     title: "LLM Wiki",
     blurb: [
-      "Thought I'd share this one here too! I have a personal knowledge base of everything I enjoy or come across online — made with Obsidian clippings and ingested into frameworks by Claude.",
-      "Created by Andrej Karpathy — it's open source, try it for yourself:",
+      "Thought I'd share this one here too! I have a personal knowledge base of everything I enjoy or come across online, made with Obsidian clippings and ingested into frameworks by Claude.",
+      "Created by Andrej Karpathy. It's open source; try it for yourself:",
     ],
     items: [
       {
         title: "The idea file",
         by: "Andrej Karpathy",
-        note: "The viral tweet + idea file — hand it to your agent and build your own.",
+        note: "The viral tweet + idea file: hand it to your agent and build your own.",
         href: "https://x.com/karpathy/status/2040470801506541998",
       },
     ],
@@ -92,10 +101,8 @@ export const dietSections: DietSection[] = [
   {
     id: "diet-podcasts",
     title: "Podcasts",
-    blurb: [
-      "Learning to enjoy a podcast was one of the habits I picked up as a teenager that dramatically changed my life. I would drive to college at seventeen — an hour there and an hour back — and I replaced music with podcasts about health, entrepreneurship, philosophy. This period of my life gave me an acute awareness of the world's realities that I could not shy away from.",
-      "My taste is very similar today, although I only really have time to listen to Founders and like to take notes.",
-    ],
+    blurb: "I got into podcasts at seventeen. These days I mostly listen to Founders and take notes.",
+    blurbIsDraft: true,
     items: [
       {
         title: "Founders",
