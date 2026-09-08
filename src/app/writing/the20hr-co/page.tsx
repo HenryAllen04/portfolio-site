@@ -137,6 +137,8 @@ export default function The20hrCoPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/images/LovableHackphoto.jpeg"
+                  width={1280}
+                  height={720}
                   alt="Henry Allen and The20hr.co team with Brian Walker who made the acquisition - celebrating Europe's fastest startup exit at Lovable hackathon in Sweden"
                   loading="lazy"
                 />

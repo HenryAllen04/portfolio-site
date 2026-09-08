@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Newsreader } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SiteSidebar from "@/components/sidebar/SiteSidebar";
+import RadiusInspector from "@/components/radius-inspector/RadiusInspector";
 import "./globals.css";
 
 // Full variable Newsreader (weight + italic + optical size) for essays —
@@ -59,6 +60,7 @@ export default function RootLayout({
       <body>
         <SiteSidebar />
         {children}
+        <RadiusInspector />
         <Analytics />
       </body>
     </html>

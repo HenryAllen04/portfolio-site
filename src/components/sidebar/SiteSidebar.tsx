@@ -141,6 +141,7 @@ export default function SiteSidebar() {
         target.isContentEditable
       )
         return;
+      if (e.repeat) return;
       if (e.key === "s" && !e.metaKey && !e.ctrlKey && !e.altKey) {
         setOpen((v) => !v);
       } else if (e.key === "Escape") {
@@ -297,7 +298,7 @@ export default function SiteSidebar() {
       )}
 
       <Sidebar
-        defaultWidth={260}
+        width={260}
         className={
           (open ? "is-open" : "") +
           // A sub-thing is the active one — on the home page that's a

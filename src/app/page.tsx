@@ -1,12 +1,10 @@
 "use client";
 
+import { useId } from "react";
 import Link from "next/link";
-import {
-  AnimatedDivider,
-  Intro,
-  IntroItem,
-  ScrollFade,
-} from "@/components/reveal/Reveal";
+import { Intro, IntroItem, ScrollFade } from "@/components/reveal/Reveal";
+import { GlassBox } from "@/components/art/GlassBox";
+import { TickRule } from "@/components/art/TickRule";
 import { writings } from "@/lib/writings";
 import { dietSections } from "@/lib/diet";
 
@@ -40,10 +38,15 @@ function DietRow({
 }: {
   item: { title: string; by?: string; note?: string; href?: string };
 }) {
+  const noteId = useId();
+  // The note reveals on hover/focus. A linked title carries the focus and
+  // is described by the note; only an unlinked row needs to be focusable
+  // itself so keyboard users can still reach the note.
   return (
     <li
       className={item.note ? "diet-item has-note" : "diet-item"}
-      tabIndex={item.note ? 0 : undefined}
+      tabIndex={item.note && !item.href ? 0 : undefined}
+      aria-describedby={item.note && !item.href ? noteId : undefined}
     >
       <span className="diet-item-title">
         {item.href ? (
@@ -52,6 +55,7 @@ function DietRow({
             rel="noopener"
             target="_blank"
             className="link-reveal"
+            aria-describedby={item.note ? noteId : undefined}
           >
             {item.title}
           </a>
@@ -60,7 +64,11 @@ function DietRow({
         )}
       </span>
       {item.by && <span className="diet-item-by">{item.by}</span>}
-      {item.note && <span className="diet-item-note">{item.note}</span>}
+      {item.note && (
+        <span id={noteId} className="diet-item-note">
+          {item.note}
+        </span>
+      )}
     </li>
   );
 }
@@ -75,8 +83,9 @@ export default function Home() {
       <Intro storageKey="home-intro" count={4}>
         {/* ─── Me ─── */}
         <section id="me" className="op-section op-hero">
-          <IntroItem index={0} as="h1">
-            Henry Allen
+          <IntroItem index={0} className="home-title">
+            <h1>Henry Allen</h1>
+            <GlassBox />
           </IntroItem>
           <IntroItem index={1}>
             <p className="home-bio">
@@ -116,7 +125,7 @@ export default function Home() {
 
         {/* ─── Writings ─── */}
         <section id="writings" className="op-section">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade className="op-heading">
             <h2>Writings</h2>
           </ScrollFade>
@@ -138,7 +147,7 @@ export default function Home() {
 
         {/* ─── Information Diet ─── */}
         <section id="information-diet" className="op-section">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade className="op-heading">
             <h2>Information Diet</h2>
           </ScrollFade>
@@ -216,7 +225,7 @@ export default function Home() {
         </section>
 
         <footer className="op-footer">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade threshold={0.1}>
             <p>
               <a href="mailto:Henry01Allen@gmail.com" className="link-reveal">
