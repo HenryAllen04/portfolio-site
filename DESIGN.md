@@ -48,6 +48,7 @@ Text
  └── Decorative/quiet (pull-quote body, italic asides) → --mono7
 Lines
  ├── Hairline borders and dividers → --mono3
+ ├── Homepage section-heading rules → --mono12
  └── Idle dial ticks / drawn divider → --mono4
 Surfaces
  ├── Page and sidebar → --bg (there are no cards or panels)
@@ -77,8 +78,9 @@ font-family override.
 
 Sizes come from the classes, not ad hoc: essay/home h1 36px, section
 display headings 24–26px, essay body 18px, UI body 15px, secondary 13–14px,
-metadata 12px. 11px exists only for uppercase eyebrow labels with `0.1em`
-tracking (`h2` base style, `.essay-date`). Never set text below 11px.
+metadata 12px. Homepage section labels are 14px uppercase; 11px otherwise
+exists only for uppercase eyebrow labels with `0.1em` tracking (`h2` base
+style, `.essay-date`). Never set text below 11px.
 Dates and years get `font-variant-numeric: tabular-nums` so lists don't
 wobble.
 

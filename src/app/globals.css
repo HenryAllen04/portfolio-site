@@ -1077,15 +1077,18 @@ footer .footer-right {
 
 .op-heading {
   margin: 48px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--mono12);
 }
 
 .op-heading h2 {
-  font-family: var(--font-essay);
-  font-size: 26px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
   font-weight: 500;
-  letter-spacing: -0.01em;
-  text-transform: none;
-  color: var(--fg);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mono8);
 }
 
 .op-lede {
