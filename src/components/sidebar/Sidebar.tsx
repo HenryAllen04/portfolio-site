@@ -3,109 +3,37 @@
 /**
  * Sidebar — ported from unlumen ui sidebar-001 (https://ui.unlumen.com/components/sidebar-001)
  * Restyled with the site's plain-CSS design system (see globals.css "Sidebar" section).
- * Spring hover highlight, animated active bar, per-item dash pattern, collapsible
- * groups, and a drag-to-resize handle.
+ * Trimmed to what the site uses: hover dimming, animated active bar and
+ * per-item dash pattern. Collapsible groups, the hover pill, the effects
+ * toggle and drag-to-resize were dead here and have been removed.
  */
 
 import * as React from "react";
 import {
   createContext,
   memo,
-  useCallback,
   useContext,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
 } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
-import { ChevronRight } from "lucide-react";
-
-const MotionChevron = motion.create(ChevronRight);
-
-const EFFECTS_KEY = "sidebar-effects";
-
-const EffectsContext = createContext<{ enabled: boolean; toggle: () => void }>({
-  enabled: true,
-  toggle: () => {},
-});
-
-function EffectsProvider({
-  children,
-  defaultEnabled = true,
-}: {
-  children: React.ReactNode;
-  defaultEnabled?: boolean;
-}) {
-  const [enabled, setEnabled] = useState(() => {
-    if (typeof window === "undefined") return defaultEnabled;
-    const stored = localStorage.getItem(EFFECTS_KEY);
-    return stored !== null ? stored === "true" : defaultEnabled;
-  });
-
-  const toggle = useCallback(() => {
-    setEnabled((prev) => {
-      const next = !prev;
-      localStorage.setItem(EFFECTS_KEY, String(next));
-      return next;
-    });
-  }, []);
-
-  const value = useMemo(() => ({ enabled, toggle }), [enabled, toggle]);
-  return (
-    <EffectsContext.Provider value={value}>{children}</EffectsContext.Provider>
-  );
-}
-
-export function useSidebarEffects() {
-  return useContext(EffectsContext);
-}
+import { motion, MotionConfig } from "motion/react";
 
 /* ─── Hover context ─────────────────────────────────────────────────────── */
 
-interface HoverRect {
-  top: number;
-  height: number;
-  left: number;
-}
-
 const HoverContext = createContext<{
   hovered: string | null;
-  hoverRect: HoverRect | null;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  setHovered: (id: string | null, rect?: HoverRect | null) => void;
+  setHovered: (id: string | null) => void;
 }>({
   hovered: null,
-  hoverRect: null,
-  containerRef: { current: null },
   setHovered: () => {},
 });
 
-function HoverProvider({
-  children,
-  containerRef,
-}: {
-  children: React.ReactNode;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}) {
-  const [hovered, setHoveredId] = useState<string | null>(null);
-  const [hoverRect, setHoverRect] = useState<HoverRect | null>(null);
-
-  const setHovered = useCallback(
-    (id: string | null, rect?: HoverRect | null) => {
-      setHoveredId(id);
-      setHoverRect(rect ?? null);
-    },
-    [],
-  );
-
-  const value = useMemo(
-    () => ({ hovered, hoverRect, containerRef, setHovered }),
-    [hovered, hoverRect, containerRef, setHovered],
-  );
-
+function HoverProvider({ children }: { children: React.ReactNode }) {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const value = useMemo(() => ({ hovered, setHovered }), [hovered]);
   return (
     <HoverContext.Provider value={value}>{children}</HoverContext.Provider>
   );
@@ -149,41 +77,12 @@ function useScrollToActive(active: boolean) {
   return ref;
 }
 
-/* ─── HoverHighlight ────────────────────────────────────────────────────── */
-
-function HoverHighlight() {
-  const { hoverRect, hovered } = useContext(HoverContext);
-  const { enabled } = useContext(EffectsContext);
-
-  return (
-    <AnimatePresence>
-      {enabled && hovered && hoverRect && (
-        <motion.div
-          key="sb-hover-bg"
-          className="sb-hover-bg"
-          style={{ right: 0 }}
-          initial={false}
-          animate={{
-            top: hoverRect.top + 2,
-            height: hoverRect.height - 4,
-            left: hoverRect.left,
-            opacity: 1,
-          }}
-          exit={{ opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
-      )}
-    </AnimatePresence>
-  );
-}
-
 /* ─── SidebarItem ───────────────────────────────────────────────────────── */
 
 export interface SidebarItemProps {
   href: string;
   label: React.ReactNode;
   isActive?: boolean;
-  isNew?: boolean;
   external?: boolean;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
@@ -192,54 +91,33 @@ export const SidebarItem = memo(function SidebarItem({
   href,
   label,
   isActive = false,
-  isNew,
   external,
   onClick,
 }: SidebarItemProps) {
-  const { hovered, setHovered, containerRef } = useContext(HoverContext);
+  const { hovered, setHovered } = useContext(HoverContext);
   const isHovered = hovered === href;
   const itemRef = useScrollToActive(isActive);
 
+  // Resting labels stay above 4.5:1 on white; dimmed siblings are a
+  // transient hover state so they may sit lower
   const opacity = isActive
     ? 1
     : hovered !== null
       ? isHovered
         ? 1
-        : 0.3
-      : 0.55;
+        : 0.45
+      : 0.7;
   // Active shift clears the 30px indicator bar with room to breathe
   const x = isActive ? 18 : isHovered ? 6 : 0;
 
-  const handleMouseEnter = () => {
-    const el = itemRef.current;
-    const container = containerRef.current;
-    if (el && container) {
-      const elRect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      // Pill starts clear of the dash rail (dashes reach 26px on hover)
-      setHovered(href, {
-        top: elRect.top - containerRect.top,
-        height: elRect.height,
-        left: 30,
-      });
-    } else {
-      setHovered(href);
-    }
-  };
-
   const linkProps = {
     onClick,
-    onMouseEnter: handleMouseEnter,
+    onMouseEnter: () => setHovered(href),
     onMouseLeave: () => setHovered(null),
     className: "sb-item-link",
   };
 
-  const content = (
-    <>
-      <span className="sb-item-label">{label}</span>
-      {isNew && <span className="sb-item-dot" />}
-    </>
-  );
+  const content = <span className="sb-item-label">{label}</span>;
 
   return (
     <div className="sb-item">
@@ -281,230 +159,44 @@ export const SidebarItem = memo(function SidebarItem({
   );
 });
 
-/* ─── SidebarSeparator ──────────────────────────────────────────────────── */
-
-export function SidebarSeparator({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
-  return <div className="sb-separator">{children}</div>;
-}
-
-/* ─── SidebarGroup ──────────────────────────────────────────────────────── */
-
-export interface SidebarGroupProps {
-  label: React.ReactNode;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-  icon?: React.ReactNode;
-}
-
-export function SidebarGroup({
-  label,
-  children,
-  defaultOpen = false,
-  icon,
-}: SidebarGroupProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const id = useId();
-  const { setHovered, containerRef } = useContext(HoverContext);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setIsOpen(defaultOpen);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    const el = buttonRef.current;
-    const container = containerRef.current;
-    if (el && container) {
-      const elRect = el.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      setHovered(id, {
-        top: elRect.top - containerRect.top,
-        height: elRect.height,
-        left: 0,
-      });
-    } else {
-      setHovered(id);
-    }
-  }, [id, setHovered, containerRef]);
-
-  const handleMouseLeave = useCallback(() => {
-    setHovered(null);
-  }, [setHovered]);
-
-  return (
-    <div className="sb-group">
-      <button
-        ref={buttonRef}
-        type="button"
-        onClick={() => setIsOpen((v) => !v)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="sb-group-trigger"
-      >
-        {icon ? (
-          <>
-            <span className="sb-group-icon">{icon}</span>
-            <span className="sb-group-label sb-group-label-grow">{label}</span>
-            <MotionChevron
-              size={14}
-              strokeWidth={2.5}
-              className="sb-group-chevron sb-group-chevron-end"
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          </>
-        ) : (
-          <>
-            <MotionChevron
-              size={11}
-              strokeWidth={2.5}
-              className="sb-group-chevron"
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-            <span className="sb-group-label">{label}</span>
-          </>
-        )}
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 420, damping: 34 }}
-            style={{ overflow: "hidden" }}
-          >
-            <div className="sb-group-items">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 /* ─── SidebarSection ────────────────────────────────────────────────────── */
 
-export function SidebarSection({
-  label,
-  children,
-}: {
-  label?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="sb-section">
-      {label && <SidebarSeparator>{label}</SidebarSeparator>}
-      {children}
-    </div>
-  );
+export function SidebarSection({ children }: { children: React.ReactNode }) {
+  return <div className="sb-section">{children}</div>;
 }
 
 /* ─── SidebarContent ────────────────────────────────────────────────────── */
 
 export function SidebarContent({ children }: { children: React.ReactNode }) {
-  const containerRef = useContext(HoverContext).containerRef;
-
   return (
     <div className="sb-content" data-scroll-viewport>
-      {/* Hover pill removed — hover feedback is the copy darkening */}
-      <div ref={containerRef} className="sb-content-inner">
-        {children}
-      </div>
+      <div className="sb-content-inner">{children}</div>
     </div>
   );
 }
 
-/* ─── Sidebar (with resize) ─────────────────────────────────────────────── */
+/* ─── Sidebar ───────────────────────────────────────────────────────────── */
 
 export interface SidebarProps {
   children: React.ReactNode;
   className?: string;
-  defaultEffectsEnabled?: boolean;
-  /** Initial width in px. Default: 240 */
-  defaultWidth?: number;
-  /** Min resize width in px. Default: 160 */
-  minWidth?: number;
-  /** Max resize width in px. Default: 400 */
-  maxWidth?: number;
+  /** Panel width in px. Default: 240 */
+  width?: number;
 }
 
-export function Sidebar({
-  children,
-  className,
-  defaultEffectsEnabled = true,
-  defaultWidth = 240,
-  minWidth = 160,
-  maxWidth = 400,
-}: SidebarProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(defaultWidth);
-  const dragging = useRef(false);
-  const startX = useRef(0);
-  const startW = useRef(0);
-
-  const onPointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      e.preventDefault();
-      dragging.current = true;
-      startX.current = e.clientX;
-      startW.current = width;
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    },
-    [width],
-  );
-
-  const onPointerMove = useCallback(
-    (e: React.PointerEvent) => {
-      if (!dragging.current) return;
-      const next = Math.min(
-        maxWidth,
-        Math.max(minWidth, startW.current + e.clientX - startX.current),
-      );
-      setWidth(next);
-    },
-    [minWidth, maxWidth],
-  );
-
-  const onPointerUp = useCallback(() => {
-    dragging.current = false;
-  }, []);
-
+export function Sidebar({ children, className, width = 240 }: SidebarProps) {
   return (
-    <EffectsProvider defaultEnabled={defaultEffectsEnabled}>
-      <HoverProvider containerRef={containerRef}>
+    // reducedMotion="user" makes every spring in here honour the OS
+    // setting; the global CSS rule only reaches CSS transitions.
+    <MotionConfig reducedMotion="user">
+      <HoverProvider>
         <aside
           className={className ? `sb-root ${className}` : "sb-root"}
           style={{ "--sb-width": `${width}px` } as React.CSSProperties}
         >
           {children}
-
-          <div
-            className="sb-resize-handle"
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-          >
-            <div className="sb-resize-line" />
-          </div>
         </aside>
       </HoverProvider>
-    </EffectsProvider>
+    </MotionConfig>
   );
-}
-
-/* ─── SidebarHeader / SidebarFooter ─────────────────────────────────────── */
-
-export function SidebarHeader({ children }: { children?: React.ReactNode }) {
-  return <div className="sb-header">{children}</div>;
-}
-
-export function SidebarFooter({ children }: { children?: React.ReactNode }) {
-  return <div className="sb-footer">{children}</div>;
 }

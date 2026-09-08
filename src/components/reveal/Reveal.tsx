@@ -28,10 +28,12 @@ import React, {
 export const EASE_OUT_QUINT = "cubic-bezier(0.23, 1, 0.32, 1)";
 
 const INTRO = {
-  duration: 500, // ms per element fade
-  stagger: 100, // ms between staggered items
+  duration: 300, // ms per element fade
+  stagger: 50, // ms between staggered items
   offsetY: 14, // px slide-up distance
 };
+
+const SCROLL_FADE_DURATION = 400;
 
 /* ─── Intro gate ────────────────────────────────────────── */
 
@@ -45,7 +47,7 @@ export function Intro({
   children,
   storageKey = "intro-seen",
   count,
-  startDelay = 150,
+  startDelay = 80,
 }: {
   children: React.ReactNode;
   /** sessionStorage key — revisits within the session skip the intro */
@@ -132,7 +134,9 @@ export function IntroItem({
     ? undefined
     : {
         opacity: active ? 1 : 0,
-        transform: active ? "translateY(0)" : `translateY(${INTRO.offsetY}px)`,
+        // `none` once revealed so the element stops being a stacking
+        // context (absolutely positioned children can escape it)
+        transform: active ? "none" : `translateY(${INTRO.offsetY}px)`,
         transition: `opacity ${INTRO.duration}ms ${EASE_OUT_QUINT}, transform ${INTRO.duration}ms ${EASE_OUT_QUINT}`,
       };
 
@@ -185,7 +189,7 @@ export function useScrollReveal<T extends HTMLElement>(threshold = 0.15) {
 export function ScrollFade({
   children,
   className,
-  duration = INTRO.duration,
+  duration = SCROLL_FADE_DURATION,
   offsetY = 10,
   delay = 0,
   // Low threshold: content resolves before the reader reaches it, so
@@ -207,7 +211,7 @@ export function ScrollFade({
       className={className}
       style={{
         opacity: revealed ? 1 : 0,
-        transform: revealed ? "translateY(0)" : `translateY(${offsetY}px)`,
+        transform: revealed ? "none" : `translateY(${offsetY}px)`,
         transition: `opacity ${duration}ms ${EASE_OUT_QUINT} ${delay}ms, transform ${duration}ms ${EASE_OUT_QUINT} ${delay}ms`,
       }}
     >

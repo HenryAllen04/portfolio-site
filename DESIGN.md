@@ -18,7 +18,7 @@ utility classes, and don't reintroduce shadcn.
 
 ```tsx
 // Correct
-<p className="index-lede">…</p>
+<p className="op-lede">…</p>
 
 // Incorrect — no Tailwind here, this renders unstyled
 <p className="text-sm text-gray-500 mb-4">…</p>

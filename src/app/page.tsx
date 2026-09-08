@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import Link from "next/link";
 import {
   AnimatedDivider,
@@ -40,10 +41,15 @@ function DietRow({
 }: {
   item: { title: string; by?: string; note?: string; href?: string };
 }) {
+  const noteId = useId();
+  // The note reveals on hover/focus. A linked title carries the focus and
+  // is described by the note; only an unlinked row needs to be focusable
+  // itself so keyboard users can still reach the note.
   return (
     <li
       className={item.note ? "diet-item has-note" : "diet-item"}
-      tabIndex={item.note ? 0 : undefined}
+      tabIndex={item.note && !item.href ? 0 : undefined}
+      aria-describedby={item.note && !item.href ? noteId : undefined}
     >
       <span className="diet-item-title">
         {item.href ? (
@@ -52,6 +58,7 @@ function DietRow({
             rel="noopener"
             target="_blank"
             className="link-reveal"
+            aria-describedby={item.note ? noteId : undefined}
           >
             {item.title}
           </a>
@@ -60,7 +67,11 @@ function DietRow({
         )}
       </span>
       {item.by && <span className="diet-item-by">{item.by}</span>}
-      {item.note && <span className="diet-item-note">{item.note}</span>}
+      {item.note && (
+        <span id={noteId} className="diet-item-note">
+          {item.note}
+        </span>
+      )}
     </li>
   );
 }

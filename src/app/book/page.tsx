@@ -49,7 +49,6 @@ export default function BookPage() {
 
   return (
     <>
-      <div className="blur" aria-hidden="true"></div>
       <main>
         <div className="main-grid">
           <article data-animation-controller="true">
