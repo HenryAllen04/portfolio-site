@@ -12,6 +12,10 @@ project); use e.g. `npx next dev --turbopack -p 3105`.
 
 ## Design system
 
+Read `DESIGN.md` before writing any UI or CSS — it has the token rules
+(which mono step for what, the accent ban), typography and motion decision
+trees, and the list of components that exist. Highlights:
+
 - Motion comes from `src/components/reveal/Reveal.tsx` (ported from
   Vultur-ai/manifesto): `Intro`/`IntroItem` for page-load stagger,
   `ScrollFade` + `AnimatedDivider` for scroll reveals. All of it respects
