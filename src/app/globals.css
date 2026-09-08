@@ -1660,3 +1660,253 @@ footer .footer-right {
     font-size: 17px;
   }
 }
+
+/* ─── Nested radius inspector ─────────────────────────────────────────────── */
+.ri-root {
+  --ri-layer-overlay: 190;
+  --ri-layer-toolbar: 200;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ri-outline,
+.ri-scan-outline {
+  position: fixed;
+  z-index: var(--ri-layer-overlay);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.ri-outline-outer {
+  border: 1px dashed var(--mono8);
+}
+
+.ri-outline-inner {
+  border: 1px solid var(--mono12);
+  outline: 1px solid var(--bg);
+  outline-offset: 1px;
+}
+
+.ri-outline-inner.is-issue {
+  border-style: double;
+  border-width: 3px;
+}
+
+.ri-scan-outline {
+  border: 1px dashed var(--mono12);
+  outline: 1px solid var(--bg);
+  outline-offset: 1px;
+}
+
+.ri-inspection {
+  position: fixed;
+  z-index: var(--ri-layer-toolbar);
+  width: 344px;
+  padding: 14px;
+  border-radius: var(--radius);
+  color: var(--mono1);
+  background: var(--mono12);
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.ri-inspection-heading,
+.ri-table-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.ri-inspection-heading {
+  grid-template-columns: 1fr auto;
+  margin-bottom: 8px;
+}
+
+.ri-kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ri-status {
+  color: var(--mono6);
+}
+
+.ri-selector,
+.ri-parent,
+.ri-insets {
+  overflow: hidden;
+  color: var(--mono3);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ri-parent {
+  margin-top: 1px;
+  color: var(--mono6);
+}
+
+.ri-table {
+  margin-top: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--mono9);
+  border-bottom: 1px solid var(--mono9);
+}
+
+.ri-table-row {
+  min-height: 25px;
+  align-items: center;
+}
+
+.ri-table-header {
+  min-height: 22px;
+  color: var(--mono6);
+  font-size: 11px;
+}
+
+.ri-table-row [role="cell"]:first-child {
+  color: var(--mono5);
+}
+
+.ri-table-row [role="cell"].is-issue::after {
+  content: " · issue";
+  color: var(--mono6);
+}
+
+.ri-insets {
+  margin-top: 9px;
+  color: var(--mono5);
+}
+
+.ri-scan-notice {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 60px);
+  z-index: var(--ri-layer-toolbar);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: min(360px, calc(100vw - 24px));
+  padding: 11px 13px;
+  border: 1px solid var(--mono3);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--mono9);
+}
+
+.ri-scan-notice-title {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.ri-toolbar {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: var(--ri-layer-toolbar);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 48px;
+  padding: 5px;
+  border: 1px solid var(--mono3);
+  border-radius: var(--radius-l);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.ri-button {
+  min-height: 38px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--mono9);
+  cursor: pointer;
+  font: 500 12px/1 var(--font-ui);
+  touch-action: manipulation;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.ri-button:active,
+.ri-button.is-active {
+  color: var(--fg);
+  background: var(--mono2);
+}
+
+.ri-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ri-toggle-mark {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--mono7);
+  border-radius: 50%;
+}
+
+.ri-toggle.is-active .ri-toggle-mark {
+  border-color: var(--fg);
+  background: var(--fg);
+}
+
+.ri-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 3px;
+  background: var(--mono3);
+}
+
+.ri-summary {
+  padding: 0 9px;
+  color: var(--mono8);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ri-button:hover {
+    color: var(--fg);
+    background: var(--mono2);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .ri-button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ri-scan-notice {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    width: auto;
+  }
+
+  .ri-toolbar {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    overflow-x: auto;
+  }
+
+  .ri-button {
+    white-space: nowrap;
+  }
+
+  .ri-summary {
+    margin-left: auto;
+  }
+
+  .ri-inspection {
+    width: calc(100vw - 24px);
+  }
+}
