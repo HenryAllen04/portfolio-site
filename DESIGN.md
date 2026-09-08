@@ -131,6 +131,19 @@ is fine for list rows but too subtle inside a paragraph.
   Writings/Diet are pinned to `SECTIONS` indices 1 and 2 in four places
   (`setExpanded(1)`, `main === 1`, `main === 2`, `1 * STOPS_PER_GAP`), so
   inserting a section before them means updating those indices too.
+- **Art** — two pieces, both in `src/components/art/`, decided from a
+  prototype round on 2026-09-08. `GlassBox` is the site mark: a hairline
+  wireframe cube with a smaller box inside (the "storage unit designed to
+  be a glass box" line, drawn). It sits to the right of the name inside
+  the first `IntroItem` (`.home-title`), draws in once on first visit, and
+  its yaw follows scroll and pointer. `TickRule` is the home-page section
+  divider: the dial's ticks laid flat, drawing in through `useScrollReveal`
+  and leaning toward the cursor. Essays keep `AnimatedDivider`. Rejected in
+  the same round: a large ghosted Newsreader glyph behind the hero, a
+  data-driven "ledger" punch card of the diet (pretty, purposeless), the
+  cube as list bullets (reads as icon clutter at 22px), the cube as a large
+  set piece beside the hero, and an orange-tinted inner box (steals the
+  dial's one colour). Colour stays monochrome.
 - **Page shells** — home content in `.one-page` with `.op-section` blocks;
   essays in `.essay`. Both cap at `--content-width` (720px). Don't invent
   a third shell for a new page; pick the one it reads most like.

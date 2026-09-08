@@ -147,6 +147,12 @@ export function IntroItem({
   );
 }
 
+/** True when the page-load intro is being skipped (revisit or reduced
+ *  motion) — mount-time art (the glass box draw-in) reads this to skip too. */
+export function useIntroSkipped() {
+  return useContext(IntroStageContext).skip;
+}
+
 /* ─── Scroll reveal ─────────────────────────────────────── */
 
 export function useScrollReveal<T extends HTMLElement>(threshold = 0.15) {

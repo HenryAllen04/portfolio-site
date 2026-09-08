@@ -2,12 +2,9 @@
 
 import { useId } from "react";
 import Link from "next/link";
-import {
-  AnimatedDivider,
-  Intro,
-  IntroItem,
-  ScrollFade,
-} from "@/components/reveal/Reveal";
+import { Intro, IntroItem, ScrollFade } from "@/components/reveal/Reveal";
+import { GlassBox } from "@/components/art/GlassBox";
+import { TickRule } from "@/components/art/TickRule";
 import { writings } from "@/lib/writings";
 import { dietSections } from "@/lib/diet";
 
@@ -86,8 +83,9 @@ export default function Home() {
       <Intro storageKey="home-intro" count={4}>
         {/* ─── Me ─── */}
         <section id="me" className="op-section op-hero">
-          <IntroItem index={0} as="h1">
-            Henry Allen
+          <IntroItem index={0} className="home-title">
+            <h1>Henry Allen</h1>
+            <GlassBox />
           </IntroItem>
           <IntroItem index={1}>
             <p className="home-bio">
@@ -127,7 +125,7 @@ export default function Home() {
 
         {/* ─── Writings ─── */}
         <section id="writings" className="op-section">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade className="op-heading">
             <h2>Writings</h2>
           </ScrollFade>
@@ -149,7 +147,7 @@ export default function Home() {
 
         {/* ─── Information Diet ─── */}
         <section id="information-diet" className="op-section">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade className="op-heading">
             <h2>Information Diet</h2>
           </ScrollFade>
@@ -227,7 +225,7 @@ export default function Home() {
         </section>
 
         <footer className="op-footer">
-          <AnimatedDivider />
+          <TickRule />
           <ScrollFade threshold={0.1}>
             <p>
               <a href="mailto:Henry01Allen@gmail.com" className="link-reveal">

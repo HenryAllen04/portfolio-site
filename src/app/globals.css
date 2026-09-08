@@ -879,6 +879,83 @@ footer .footer-right {
   opacity: 1;
 }
 
+/* ─── Art: glass box mark + tick rule ── */
+/* The mark sits to the right of the name; both share one intro stage. */
+.home-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.home-title h1 {
+  margin-bottom: 0;
+}
+
+.glass-box {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.glass-box line {
+  stroke-width: 1;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.glass-edge-front { stroke: var(--mono7); }
+.glass-edge-back { stroke: var(--mono4); }
+.glass-edge-inner { stroke: var(--mono5); }
+
+/* Hairline draw-in on first visit; <GlassBox> drops data-draw when the
+   intro is skipped, and reduced motion collapses it globally. */
+.glass-box[data-draw] line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: glass-draw 1150ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+@keyframes glass-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Tick rule: hidden until <useScrollReveal> flips data-draw, then each tick
+   grows in left → right. Hover leans ticks toward the cursor (inline
+   transforms from the component; the keyframe fill is cleared by then). */
+.tick-rule-wrap {
+  margin: 0;
+}
+
+.tick-rule {
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.tick-rule line {
+  stroke: var(--mono5);
+  stroke-width: 1;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+
+.tick-rule line.is-major {
+  stroke: var(--mono7);
+}
+
+.tick-rule[data-draw] line {
+  opacity: 0.6;
+  animation: tick-in 400ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
+  animation-delay: calc(var(--i) * 12ms);
+}
+
+@keyframes tick-in {
+  from { opacity: 0; transform: scaleY(0); }
+}
+
 /* ─── Writings index (home) ── */
 .index-list {
   list-style: none;
