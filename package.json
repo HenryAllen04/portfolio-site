@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
+    "dialkit": "^2.0.1",
     "lucide-react": "^0.540.0",
     "motion": "^12.42.2",
     "next": "^15.5.25",
