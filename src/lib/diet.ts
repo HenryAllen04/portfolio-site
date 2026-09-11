@@ -30,7 +30,7 @@ export interface DietSection {
   title: string;
   /** Optional intro under the section heading — an array renders as multiple paragraphs. */
   blurb?: string | string[];
-  /** Marks rewritten wording in blue for review. */
+  /** Marks rewritten wording in blue for review — dev builds only. */
   blurbIsDraft?: boolean;
   quote?: { text: string; by: string; source: string };
   /** Optional small link beside the section heading (e.g. Goodreads). */

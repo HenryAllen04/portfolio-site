@@ -3,13 +3,18 @@ import { Newsreader } from "next/font/google";
 import dynamic from "next/dynamic";
 import { Analytics } from "@vercel/analytics/next";
 import SiteSidebar from "@/components/sidebar/SiteSidebar";
-import RadiusInspector from "@/components/radius-inspector/RadiusInspector";
 import "./globals.css";
 
 // Dev-only: keeps dialkit (and its CSS) out of production bundles entirely.
 const DialKitDock =
   process.env.NODE_ENV === "development"
     ? dynamic(() => import("@/components/dev/DialKitDock"))
+    : null;
+
+// Dev-only for the same reason — the inspector is an authoring tool.
+const RadiusInspector =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("@/components/radius-inspector/RadiusInspector"))
     : null;
 
 // Full variable Newsreader (weight + italic + optical size) for essays —
@@ -67,7 +72,7 @@ export default function RootLayout({
       <body>
         <SiteSidebar />
         {children}
-        <RadiusInspector />
+        {RadiusInspector ? <RadiusInspector /> : null}
         {DialKitDock ? <DialKitDock /> : null}
         <Analytics />
       </body>
