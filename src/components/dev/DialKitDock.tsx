@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * DialKit editor UI — the parameter panel and the timeline dock. Both hide
- * themselves in production builds; the hooks that feed them keep running.
+ * DialKit editor UI — the parameter panel and the timeline dock. Only
+ * imported in development (see layout.tsx); the hooks that feed them keep
+ * running in production with their baked-in values.
  */
 
 import { DialRoot, DialTimeline } from "dialkit";
