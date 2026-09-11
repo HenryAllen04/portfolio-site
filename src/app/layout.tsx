@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { Newsreader } from "next/font/google";
+import dynamic from "next/dynamic";
 import { Analytics } from "@vercel/analytics/next";
 import SiteSidebar from "@/components/sidebar/SiteSidebar";
 import RadiusInspector from "@/components/radius-inspector/RadiusInspector";
-import DialKitDock from "@/components/dev/DialKitDock";
 import "./globals.css";
+
+// Dev-only: keeps dialkit (and its CSS) out of production bundles entirely.
+const DialKitDock =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("@/components/dev/DialKitDock"))
+    : null;
 
 // Full variable Newsreader (weight + italic + optical size) for essays —
 // the local woff2 subset stays as the fallback for instant first paint.
@@ -62,7 +68,7 @@ export default function RootLayout({
         <SiteSidebar />
         {children}
         <RadiusInspector />
-        <DialKitDock />
+        {DialKitDock ? <DialKitDock /> : null}
         <Analytics />
       </body>
     </html>
