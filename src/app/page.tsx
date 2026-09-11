@@ -8,6 +8,9 @@ import { TickRule } from "@/components/art/TickRule";
 import { writings } from "@/lib/writings";
 import { dietSections } from "@/lib/diet";
 
+// The blue draft-copy review marker is an authoring aid; never show it live.
+const isDev = process.env.NODE_ENV === "development";
+
 const LINKS = [
   { label: "LinkedIn", href: "https://linkedin.com/in/henryallen" },
   { label: "GitHub", href: "https://github.com/HenryAllen04" },
@@ -183,7 +186,10 @@ export default function Home() {
                     ? section.blurb
                     : [section.blurb]
                   ).map((para) => (
-                    <p key={para} className={`diet-blurb${section.blurbIsDraft ? " draft-copy" : ""}`}>
+                    <p
+                      key={para}
+                      className={`diet-blurb${section.blurbIsDraft && isDev ? " draft-copy" : ""}`}
+                    >
                       {para}
                     </p>
                   ))}
