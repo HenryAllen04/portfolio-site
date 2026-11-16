@@ -433,7 +433,7 @@ footer .footer-right {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
   /* Content-sized rows: the right column sets the height, the name sits
-     48px above its top and the contact links level with its bottom. */
+     with the writing column's top line a few px under it and the contact links level with its bottom. */
   grid-template-rows: auto auto;
   grid-template-areas:
     "main side"
@@ -447,11 +447,11 @@ footer .footer-right {
   padding: 72px 40px 56px;
 }
 
-/* The name stands a step above the writing column's top line (Henry,
-   2026-11-16) */
+/* The name stands above the writing column; its top line starts a few
+   px under the name (Henry, 2026-11-16). 34px name, so 6px clear. */
 .home-main {
   grid-area: main;
-  margin-top: -48px;
+  margin-top: -40px;
 }
 
 /* Bottom-aligned with the shelf, so the columns frame each other */
