@@ -2,7 +2,7 @@ import { writings } from "@/lib/writings";
 
 export const dynamic = "force-static";
 
-const SITE_URL = "https://henryallen.dev";
+const SITE_URL = "https://henryallen.me";
 
 function escapeXml(s: string) {
   return s

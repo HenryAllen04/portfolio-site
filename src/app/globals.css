@@ -9,14 +9,6 @@
 }
 
 @font-face {
-  font-family: 'Sohne';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/sohne-subset-0.woff2') format('woff2');
-}
-
-@font-face {
   font-family: 'Newsreader';
   font-style: normal;
   font-weight: 100 900;
@@ -29,8 +21,11 @@
   /* Layout */
   --page-width: 1072px;
   --content-width: 720px;
-  /* Accent — used only for the active indicator in the nav dial */
-  --accent: #cd5700;
+  /* The one accent (Vermilion). It marks the live thing: the dial's
+     current position, the link under the cursor, keyboard focus, the
+     full stop after the name. Never a ground, never a second hue. */
+  --accent: #e4471b;
+  --on-accent: #151413;
   --page-left: auto;
   --page-top: 128px;
   --header-height: 48px;
@@ -43,34 +38,42 @@
   --gap-4x: 64px;
   --gap-8x: 128px;
   
-  /* Typography */
+  /* Typography — three registers, three jobs:
+     serif = what you read, sans = what you operate, mono = what is measured.
+     (--font-sans is kept as an alias so legacy rules still resolve.) */
   --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-sans: 'Sohne', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Newsreader', Georgia, serif;
-  
-  /* Light Theme Colors */
-  --bg: #ffffff;
-  --fg: #1c1c1c;
-  --mono1: #fafafa;
-  --mono2: #f5f5f5;
-  --mono3: #ebebeb;
-  --mono4: #e1e1e1;
-  --mono5: #d7d7d7;
-  --mono6: #c3c3c3;
-  --mono7: #a0a0a0;
-  --mono8: #767676;
-  --mono9: #5a5a5a;
-  --mono10: #454545;
-  --mono11: #303030;
-  --mono12: #1c1c1c;
-  
-  /* Border Radius */
-  --radius: 6px;
-  --radius-l: 12px;
-  
-  /* Transitions */
-  --transition: 200ms ease;
-  --transition-med: 320ms ease;
+  --font-sans: var(--font-ui);
+  --font-serif: var(--font-newsreader, 'Newsreader'), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Light theme: warm paper and ink. Every grey sits on the same
+     slightly red-shifted axis, so the page reads as printed matter.
+     The mono number is distance from the background (see DESIGN.md). */
+  --bg: #f4f2ed;      /* paper */
+  --fg: #151413;      /* ink */
+  --mono1: #efede7;
+  --mono2: #e9e6df;   /* paper-2: the one recessed step (hover fill) */
+  --mono3: #d6d3cc;   /* hairline */
+  --mono4: #c9c5bd;
+  --mono5: #b8b4ab;
+  --mono6: #a5a197;
+  --mono7: #8c887f;   /* mute: hints, inactive labels, large text only */
+  --mono8: #6e6a62;   /* metadata: darker than the lab's mute so 12px passes AA */
+  --mono9: #4a4741;   /* ink-2: secondary reading text */
+  --mono10: #3a3833;
+  --mono11: #282624;
+  --mono12: #151413;
+
+  /* Square corners everywhere. The only curves are functional
+     (rings, dots); there are no rounded surfaces on this site. */
+  --radius: 0;
+  --radius-l: 0;
+
+  /* Motion: one curve for every physical move (fast start, soft
+     landing, no overshoot); colour/state changes are quicker. */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --transition: 150ms var(--ease);
+  --transition-med: 300ms var(--ease);
   --ease-in-out-quad: cubic-bezier(0.46, 0.03, 0.52, 0.96);
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   
@@ -84,24 +87,24 @@
   --body-margin-right: max(24px, env(safe-area-inset-right));
 }
 
-/* Dark Theme */
+/* Dark theme: the night surface (paper on night), same warm axis,
+   same accent. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1c1c1c;
-    --fg: #fafafa;
-    --accent: #ff720a;
-    --mono1: #1c1c1c;
-    --mono2: #303030;
-    --mono3: #454545;
-    --mono4: #5a5a5a;
-    --mono5: #7d7d7d;
-    --mono6: #a0a0a0;
-    --mono7: #c3c3c3;
-    --mono8: #d7d7d7;
-    --mono9: #e1e1e1;
-    --mono10: #ebebeb;
-    --mono11: #f5f5f5;
-    --mono12: #fafafa;
+    --bg: #121110;    /* night */
+    --fg: #f4f2ed;    /* paper */
+    --mono1: #121110;
+    --mono2: #1e1d1b;
+    --mono3: #2a2826; /* night-2: rules on night */
+    --mono4: #3a3835;
+    --mono5: #4f4c48;
+    --mono6: #6a6761;
+    --mono7: #8f8b83;
+    --mono8: #a8a49b;
+    --mono9: #c9c5bc;
+    --mono10: #dad7cf;
+    --mono11: #e8e5de;
+    --mono12: #f4f2ed;
   }
 }
 
@@ -161,30 +164,35 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  background: var(--bg);
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-/* Typography Base */
+/* Typography Base — headings are things you read, so they are serif,
+   light at size with tracking tightened only at display sizes. */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-weight: 500;
+  font-family: var(--font-serif);
+  font-weight: 400;
   margin: 0;
 }
 
 h1 {
   font-size: 28px;
-  line-height: 1.3;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  font-weight: 300;
+  letter-spacing: -0.02em;
 }
 
+/* Bare h2 is the mono kicker (eyebrow) */
 h2 {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--mono9);
-  font-family: var(--font-ui);
+  letter-spacing: 0.04em;
+  color: var(--mono8);
 }
 
 p {
@@ -211,23 +219,23 @@ a {
   }
 }
 
-/* Keyboard focus */
+/* Keyboard focus: a 1px accent ring, the same mark as the lens ring —
+   it says "this is where you are". */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--mono8);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
 }
 
-/* Selection */
+/* Selection is state, so it takes the accent (text in --on-accent) */
 ::-moz-selection {
-  background: var(--mono5);
-  color: var(--fg);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 ::selection {
-  background: var(--mono5);
-  color: var(--fg);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 /* Animation Classes */
@@ -369,373 +377,11 @@ footer .footer-right {
   width: 1px;
 }
 
-/* Sidebar — click-to-open overlay (mechanics from unlumen sidebar-001) */
-.sb-root {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  height: 100dvh;
-  width: var(--sb-width, 260px);
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  font-family: var(--font-ui);
-  transform: translateX(-100%);
-  /* visibility flips after the slide-out so closed content is neither
-     visible nor keyboard-reachable. Short and steep: this opens from a
-     keyboard shortcut, so it should feel instant. */
-  --sb-slide: 240ms cubic-bezier(0.32, 0.72, 0, 1);
-  visibility: hidden;
-  transition: transform var(--sb-slide), visibility 0s 240ms;
-  z-index: 100;
-}
-
-.sb-root.is-open {
-  transform: translateX(0);
-  visibility: visible;
-  transition: transform var(--sb-slide), visibility 0s;
-}
-
-.sb-content {
-  flex: 1;
-  overflow-y: auto;
-  /* Clear breathing room below the fixed toggle icon */
-  padding: 88px 12px 16px;
-  scrollbar-width: none;
-}
-
-/* Dial entries fade in together as the panel lands — one short beat,
-   no per-item stagger (the panel is opened by keyboard all day) */
-.sb-section > * {
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity 160ms var(--ease-out-quad),
-    transform 160ms var(--ease-out-quad);
-}
-
-.sb-root.is-open .sb-section > * {
-  opacity: 1;
-  transform: none;
-  transition-delay: 80ms;
-}
-
-/* Collapsed dial rail on the page edge (home only) */
-.sb-rail {
-  position: fixed;
-  left: 0;
-  /* Anchored near the top with the content, not adrift mid-page */
-  top: var(--page-top);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 14px 14px 14px 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 80;
-  transition: opacity var(--transition);
-}
-
-.sb-rail.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.sb-rail-tick {
-  display: block;
-  /* Full-length box scaled down from the left, so length changes stay
-     on the compositor (no layout per tick) */
-  width: 22px;
-  height: 1px;
-  background: var(--mono4);
-  transform-origin: left center;
-  transform: scaleX(calc(8 / 22));
-  transition: background var(--transition), transform var(--transition);
-}
-
-.sb-rail-tick.is-stop {
-  transform: scaleX(calc(14 / 22));
-  background: var(--mono6);
-}
-
-.sb-rail-tick.is-near {
-  transform: scaleX(calc(11 / 22));
-  background: var(--mono5);
-}
-
-.sb-rail-tick.is-stop.is-near {
-  transform: scaleX(calc(16 / 22));
-}
-
-.sb-rail-tick.is-active {
-  transform: scaleX(1);
-  height: 2px;
-  border-radius: 1px;
-  background: var(--fg);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .sb-rail:hover .sb-rail-tick {
-    background: var(--mono6);
-  }
-
-  .sb-rail:hover .sb-rail-tick.is-stop {
-    background: var(--mono8);
-  }
-
-  .sb-rail:hover .sb-rail-tick.is-active {
-    background: var(--fg);
-  }
-}
-
-/* Toggle tooltip on hover (sidebar-002 style) */
-@media (hover: hover) and (pointer: fine) {
-  .sb-toggle::after {
-    content: "Sidebar · S";
-    position: absolute;
-    top: 100%;
-    left: 4px;
-    padding: 4px 8px;
-    border-radius: var(--radius);
-    background: var(--mono12);
-    color: var(--mono1);
-    font-family: var(--font-ui);
-    font-size: 11px;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(-2px);
-    pointer-events: none;
-    transition: opacity var(--transition), transform var(--transition);
-  }
-
-  .sb-toggle:hover::after {
-    opacity: 1;
-    transform: translateY(0);
-    transition-delay: 350ms;
-  }
-}
-
-.sb-content::-webkit-scrollbar {
-  display: none;
-}
-
-.sb-content-inner {
-  position: relative;
-  padding: 0 4px;
-}
-
-.sb-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.sb-item {
-  position: relative;
-  margin: 2px 0;
-}
-
-/* Dial ticks between labelled stops — fixed geometry. The indicator
-   travels through them on scroll, and an expanded piece's children
-   appear ON them (labels are absolutely positioned, so revealing them
-   never moves the dial). Rows are tall enough to carry a label. */
-.sb-tick {
-  position: relative;
-  height: 25px;
-}
-
-.sb-tick-dash {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 20px;
-  height: 1px;
-  background: var(--mono4);
-  transform-origin: left center;
-  transform: scaleX(0.5);
-  transition: transform var(--transition), background var(--transition);
-}
-
-/* Ruler falloff: ticks adjacent to the indicator lean toward it */
-.sb-tick-dash.is-near {
-  transform: scaleX(0.7);
-  background: var(--mono6);
-}
-
-/* Labels that land on ticks when a piece is expanded — keyframe entrance
-   (snappy staggered ease-out); absolutely positioned so nothing moves */
-.sb-tick-label {
-  position: absolute;
-  left: 34px;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  animation: sb-label-in 180ms var(--ease-out-quad) both;
-  animation-delay: calc(40ms + var(--i, 0) * 40ms);
-}
-
-@keyframes sb-label-in {
-  from {
-    opacity: 0;
-    transform: translateX(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.sb-sublink {
-  display: block;
-  width: 100%;
-  padding: 4px 8px 4px 0;
-  font-size: 13px;
-  color: var(--mono9);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color var(--transition), transform var(--transition);
-}
-
-.sb-sublink:hover {
-  color: var(--fg);
-  opacity: 1;
-  transform: translateX(3px);
-}
-
-.sb-sublink.is-active {
-  color: var(--fg);
-}
-
-/* The tick's own dash doubles as the label's dash */
-.sb-tick.has-label .sb-tick-dash {
-  background: var(--mono5);
-}
-
-.sb-tick.has-label:hover .sb-tick-dash {
-  transform: scaleX(0.85);
-  background: var(--mono7);
-}
-
-.sb-tick.has-active-label .sb-tick-dash {
-  transform: scaleX(1);
-  height: 1.8px;
-  border-radius: 999px;
-  background: var(--accent);
-}
-
-/* Scroll-position indicator — orange for the piece you're on. It goes
-   dark only once you've drilled in and selected a sub-thing (which then
-   carries the orange). */
-.sb-active-bar {
-  pointer-events: none;
-  position: absolute;
-  z-index: 10;
-  left: 4px;
-  top: 50%;
-  height: 1.8px;
-  transform: translateY(-50%);
-  border-radius: 999px;
-  background: var(--accent);
-}
-
-.sb-root.sub-selected .sb-active-bar {
-  background: var(--fg);
-}
-
-.sb-dash {
-  pointer-events: none;
-  position: absolute;
-  left: 0;
-  height: 1px;
-}
-
-.sb-dash-mid {
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--mono6);
-}
-
-.sb-dash-quarter {
-  top: 25%;
-  width: 13px;
-  background: var(--mono4);
-}
-
-.sb-dash-top {
-  top: 0;
-  width: 16px;
-  background: var(--mono4);
-}
-
-.sb-dash-threequarter {
-  top: 75%;
-  width: 13px;
-  background: var(--mono4);
-}
-
-.sb-item-link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 8px;
-  padding: 12px 8px 12px 18px;
-  font-size: 15px;
-  color: var(--fg);
-  user-select: none;
-}
-
-.sb-item-link:hover {
-  opacity: 1;
-}
-
-.sb-item-label {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Nav toggle + backdrop */
-.sb-toggle {
-  position: fixed;
-  top: 14px;
-  left: 14px;
-  z-index: 110;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.sb-toggle-icon {
-  width: 30px;
-  height: 30px;
-}
-
-/* Invisible click-catcher: clicking the page dismisses the sidebar
-   without darkening anything */
-.sb-backdrop {
-  position: fixed;
-  inset: 0;
-  background: transparent;
-  z-index: 90;
-}
-
-/* ─── New site (manifesto motion language, monochrome) ─────────────── */
+/* ─── Site (paper + ink, one accent, three registers) ──────────────── */
 
 :root {
   /* Full variable Newsreader (set by next/font); subset woff2 fallback */
-  --font-essay: var(--font-newsreader, 'Newsreader'), Georgia, serif;
+  --font-essay: var(--font-serif);
 }
 
 /* Divider drawn by <AnimatedDivider> */
@@ -746,7 +392,8 @@ footer .footer-right {
   transform-origin: left;
 }
 
-/* Underline reveal on hover (from the manifesto, monochrome) */
+/* Underline reveal on hover. The line is the accent: it marks the one
+   link under the cursor, and nothing at rest. */
 .link-reveal {
   position: relative;
   display: inline-block;
@@ -764,114 +411,97 @@ footer .footer-right {
     bottom: -2px;
     height: 1px;
     width: 0;
-    background: var(--mono8);
-    transition: width 300ms var(--ease-out-quad);
+    background: var(--accent);
+    transition: width var(--transition-med);
   }
 
   .link-reveal:hover::after {
     width: 100%;
   }
+
+  /* Padded tap targets: keep the line under the text, not the box */
+  .home-links .link-reveal::after { bottom: 10px; }
 }
 
-/* ─── One-page home ── */
-.one-page {
-  max-width: var(--content-width);
+/* ─── Home: one screen ── */
+/* The composition is the message. Five things: name, one line, essay
+   titles, the shelf, contact. Name and line sit top-left, contact
+   bottom-left, writing and the shelf fill the right. Sized for one
+   desktop screen (~1280×800); shorter viewports scroll. Anything new
+   has to earn a place against that list. */
+.home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  /* Content-sized rows: the right column sets the height, the name sits
+     level with its top and the contact links level with its bottom. */
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "main side"
+    "contact side";
+  align-content: center;
+  column-gap: 96px;
+  max-width: 1180px;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: var(--page-top) 24px var(--gap-8x);
+  padding: 72px 40px 56px;
 }
 
-/* One display voice: the name joins the Newsreader system */
-.one-page h1 {
-  font-family: var(--font-essay);
-  font-size: 36px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  margin-bottom: 24px;
+.home-main {
+  grid-area: main;
 }
 
-.op-section {
-  /* Generous scroll room so the scrollspy dial has distinct stops */
-  padding-bottom: var(--gap-4x);
-  scroll-margin-top: 96px;
+/* Bottom-aligned with the shelf, so the columns frame each other */
+.home-contact {
+  grid-area: contact;
+  align-self: end;
 }
 
-.op-heading {
-  margin: 48px 0 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--mono12);
+.home-side {
+  grid-area: side;
+  min-width: 0;
 }
 
-.op-heading h2 {
-  font-family: var(--font-ui);
-  font-size: 14px;
-  line-height: 1.5;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mono8);
+/* The name is small: the composition carries the page, not the type */
+.home h1 {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: -0.02em;
 }
 
-.op-lede {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--mono9);
-  margin-bottom: 40px;
-  max-width: 60ch;
-}
-
-.op-lede em {
-  font-family: var(--font-essay);
-  color: var(--fg);
-}
-
-.home-bio {
-  font-size: 16px;
-  line-height: 1.7;
-  max-width: 52ch;
-}
-
-.home-bio em {
-  font-family: var(--font-essay);
-}
-
-.home-facts {
-  list-style: none;
-  padding: 0;
-  margin: 28px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 56ch;
-}
-
-.home-facts li {
-  position: relative;
-  padding-left: 18px;
-  font-size: 14px;
-  line-height: 1.6;
+.home-intro {
+  margin-top: 12px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 300;
   color: var(--mono9);
 }
 
-.home-facts li::before {
-  content: "›";
-  position: absolute;
-  left: 0;
-  color: var(--mono6);
+.home-shelf {
+  margin-top: 56px;
+  scroll-margin-top: 48px;
 }
 
 .home-links {
   list-style: none;
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 0 20px;
   padding: 0;
-  margin: 32px 0 0;
+  margin: 0;
 }
 
+/* 12px block padding: a 45px-tall tap target around 14px text */
 .home-links a {
   display: inline-block;
-  padding: 10px 0;
+  padding: 12px 0;
   font-size: 14px;
+  font-weight: 500;
   color: var(--mono9);
+  transition: color var(--transition);
 }
 
 .home-links a:hover {
@@ -879,48 +509,7 @@ footer .footer-right {
   opacity: 1;
 }
 
-/* ─── Art: glass box mark + tick rule ── */
-/* The mark sits to the right of the name; both share one intro stage. */
-.home-title {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.home-title h1 {
-  margin-bottom: 0;
-}
-
-.glass-box {
-  display: block;
-  flex: none;
-  overflow: visible;
-}
-
-.glass-box line {
-  stroke-width: 1;
-  stroke-linecap: round;
-  fill: none;
-}
-
-.glass-edge-front { stroke: var(--mono7); }
-.glass-edge-back { stroke: var(--mono4); }
-.glass-edge-inner { stroke: var(--mono5); }
-
-/* Hairline draw-in on first visit; <GlassBox> drops data-draw when the
-   intro is skipped, and reduced motion collapses it globally. */
-.glass-box[data-draw] line {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: glass-draw 1150ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  animation-delay: calc(var(--i) * 45ms);
-}
-
-@keyframes glass-draw {
-  to { stroke-dashoffset: 0; }
-}
-
+/* ─── Art: tick rule (currently unused) ── */
 /* Tick rule: hidden until <useScrollReveal> flips data-draw, then each tick
    grows in left → right. Hover leans ticks toward the cursor (inline
    transforms from the component; the keyframe fill is cleared by then). */
@@ -956,41 +545,83 @@ footer .footer-right {
   from { opacity: 0; transform: scaleY(0); }
 }
 
-/* ─── Writings index (home) ── */
-.index-list {
+/* ─── Writing (home): a line reader ── */
+/* Titles only. At rest every title is full contrast; hovering one lights
+   it, dims the others, and snaps the accent guide to its edge. The guide
+   hangs in the column gap so titles align with the shelf below. */
+.reader {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--mono3);
+  scroll-margin-top: 48px;
 }
 
-.index-item {
+.reader li {
+  border-bottom: 1px solid var(--mono3);
+}
+
+.reader-item {
+  position: relative;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
   padding: 14px 0;
-  border-bottom: 1px solid var(--mono3);
 }
 
-.index-item:hover {
+.reader-item:hover {
   opacity: 1;
 }
 
-.index-item-title {
-  font-family: var(--font-essay);
-  font-size: 19px;
+/* The guide: a 2px accent bar on the edge facing the content */
+.reader-item::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 140ms ease-out;
+}
+
+.reader-item:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.reader-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--fg);
   transition: color var(--transition);
 }
 
-.index-item:hover .index-item-title {
-  color: var(--mono8);
-}
-
-.index-item-date {
+.reader-date {
+  font-family: var(--font-mono);
   font-size: 12px;
   color: var(--mono8);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .reader:has(.reader-item:hover) .reader-title {
+    color: var(--mono7);
+  }
+
+  .reader .reader-item:hover .reader-title {
+    color: var(--fg);
+  }
+
+  .reader-item:hover::before {
+    transform: scaleY(1);
+  }
 }
 
 /* ─── Essay ── */
@@ -1000,33 +631,66 @@ footer .footer-right {
   padding: var(--page-top) 24px var(--gap-4x);
 }
 
-.essay-date {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+/* Mono path back home. .essay prefix: must outrank `.essay p` below */
+.essay .essay-path {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
   color: var(--mono8);
-  margin-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+/* Block padding cancelled by margin: a 44px tap target, no layout change */
+.essay-path a {
+  display: inline-block;
+  padding: 14px 0;
+  margin: -14px 0;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--mono5);
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--transition);
+}
+
+.essay-path a:hover {
+  opacity: 1;
+  text-decoration-color: var(--accent);
+}
+
+.essay .essay-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mono8);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 20px;
 }
 
 .essay h1 {
   font-family: var(--font-essay);
-  font-size: 36px;
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  margin-bottom: 32px;
+  font-size: clamp(40px, 5.4vw, 60px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 36px;
   text-wrap: balance;
 }
 
 .essay p {
   font-family: var(--font-essay);
-  font-size: 18px;
-  line-height: 1.75;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
   color: var(--fg);
-  /* Newsreader's ch is wide: 58ch is ~72 characters at 18px. The 720px
-     shell alone runs to ~83. */
-  max-width: 58ch;
+  text-wrap: pretty;
+  /* Newsreader's ch is wide: 54ch is ~68 characters at 20px. The 720px
+     shell alone runs to ~75. */
+  max-width: 54ch;
 }
 
 .essay-intro-para {
@@ -1034,33 +698,36 @@ footer .footer-right {
 }
 
 .essay strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .essay-section {
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
 .essay-section-heading {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 28px 0 16px;
+  gap: 16px;
+  margin: 28px 0 18px;
 }
 
 .essay-section-heading h2 {
   font-family: var(--font-essay);
-  font-size: 24px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 300;
+  letter-spacing: -0.02em;
   text-transform: none;
   color: var(--fg);
   text-wrap: balance;
 }
 
 .essay-section-number {
-  font-size: 13px;
-  color: var(--mono7);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mono8);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1076,10 +743,12 @@ footer .footer-right {
 
 .essay-quote blockquote {
   font-family: var(--font-essay);
-  font-size: 26px;
+  font-size: 30px;
   font-style: italic;
-  line-height: 1.4;
-  color: var(--mono7);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--mono8);
   margin: 0;
   text-wrap: balance;
 }
@@ -1087,9 +756,10 @@ footer .footer-right {
 .essay-quote cite {
   display: block;
   margin-top: 20px;
+  font-family: var(--font-mono);
   font-size: 11px;
   font-style: normal;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--mono8);
 }
@@ -1104,15 +774,18 @@ footer .footer-right {
   margin: 0 0 22px;
   color: var(--mono8);
   font-family: var(--font-essay);
-  font-size: 16px;
+  font-size: 17px;
   font-style: italic;
   text-decoration: underline;
+  text-decoration-color: var(--mono5);
+  text-underline-offset: 4px;
   cursor: pointer;
-  transition: color var(--transition);
+  transition: color var(--transition), text-decoration-color var(--transition);
 }
 
 .watch-story-link:hover {
   color: var(--fg);
+  text-decoration-color: var(--accent);
 }
 
 .essay-body > * + * {
@@ -1170,7 +843,7 @@ footer .footer-right {
 .essay-media-caption a {
   font-family: var(--font-essay);
   font-style: italic;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--mono8);
 }
 
@@ -1181,6 +854,8 @@ footer .footer-right {
 
 .essay-end {
   margin-top: 64px;
+  padding-top: 8px;
+  border-top: 1px solid var(--mono3);
 }
 
 .essay-footer-nav {
@@ -1193,108 +868,22 @@ footer .footer-right {
 
 .essay-adjacent {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 0 20px;
 }
 
 .essay-back {
   display: inline-block;
-  padding: 8px 0;
-  font-size: 14px;
+  padding: 12px 0;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--mono8);
+  transition: color var(--transition);
 }
 
 .essay-back:hover {
   color: var(--fg);
   opacity: 1;
-}
-
-/* One-page footer */
-.op-footer {
-  margin-top: var(--gap-2x);
-}
-
-.op-footer p {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 24px;
-  font-size: 13px;
-  color: var(--mono8);
-}
-
-.op-footer a {
-  color: var(--mono8);
-  padding: 8px 0;
-}
-
-.op-footer a:hover {
-  color: var(--fg);
-  opacity: 1;
-}
-
-.op-footer-sep {
-  color: var(--mono5);
-}
-
-/* ─── Information diet ── */
-/* Real sections: hairline + serif title, year headers, two-column grid */
-.diet-section-block {
-  margin-top: 48px;
-  padding-top: 28px;
-  border-top: 1px solid var(--mono3);
-  scroll-margin-top: 96px;
-}
-
-.diet-section-title {
-  font-family: var(--font-essay);
-  font-size: 21px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--fg);
-  margin: 0 0 24px;
-}
-
-.diet-section-heading {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 14px;
-  margin-bottom: 24px;
-}
-
-.diet-section-heading .diet-section-title {
-  margin-bottom: 0;
-}
-
-.diet-heading-link {
-  font-size: 12px;
-  color: var(--mono9);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--mono6);
-}
-
-.diet-quote {
-  margin: -8px 0 24px;
-}
-
-.diet-quote p {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--mono9);
-}
-
-.diet-quote footer {
-  margin-top: 4px;
-  padding: 0;
-  border: 0;
-  font-size: 12px;
-  color: var(--mono9);
-}
-
-.diet-quote cite {
-  font-style: normal;
 }
 
 .draft-copy {
@@ -1305,116 +894,195 @@ footer .footer-right {
   .draft-copy { color: #8aafff !important; }
 }
 
-.diet-blurb {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--mono9);
-  margin: -12px 0 24px;
-  max-width: 60ch;
+/* ─── Book shelf (upright, lab tile 13) ── */
+/* One hairline object holding real data. Sizes are cqw off .shelf, so
+   the drawing scales as one piece; text never drops below 11px. */
+.shelf {
+  container-type: inline-size;
 }
 
-.diet-blurb + .diet-blurb {
-  margin-top: -10px;
+.shelf-groups {
+  display: flex;
+  align-items: flex-start;
+  touch-action: pan-y;
 }
 
-.diet-year-block {
-  margin-bottom: 36px;
+.shelf-group {
+  display: flex;
+  flex-direction: column;
 }
 
-.diet-year {
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+/* The last group runs the ground line out to the edge */
+.shelf-group:last-child {
+  flex: 1;
+}
+
+.shelf-spines {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6cqw;
+  height: clamp(160px, 46cqw, 260px);
+  padding-right: 3cqw;
+  border-bottom: max(2px, 0.6cqw) solid var(--fg);
+}
+
+.shelf-group:last-child .shelf-spines {
+  padding-right: 0;
+}
+
+.shelf-spine {
+  flex: none;
+  width: max(16px, 4.8cqw);
+  height: var(--h);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: max(5px, 1.4cqw) 0;
+  margin: 0;
+  border: 1px solid var(--fg);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+  transition: transform var(--transition-med), box-shadow var(--transition);
+}
+
+/* Reads bottom-up, as a spine does */
+.shelf-spine-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  max-height: 100%;
+  overflow: hidden;
+  font-family: var(--font-serif);
+  font-size: max(11px, 2.6cqw);
+  line-height: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The live book: lifted, with the accent bar on its top edge */
+.shelf-spine.is-live {
+  transform: translateY(-3cqw);
+  box-shadow: inset 0 max(3px, 0.8cqw) 0 var(--accent);
+}
+
+.shelf-year {
+  margin-top: max(6px, 1.6cqw);
+  font-family: var(--font-mono);
+  font-size: max(11px, 2cqw);
+  line-height: 1;
   color: var(--mono8);
   font-variant-numeric: tabular-nums;
-  margin: 0 0 14px;
-  font-family: var(--font-ui);
+  white-space: nowrap;
 }
 
-.diet-grid {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Every readout state sits in one grid cell; only the live one is
+   visible. The cell is as tall as the tallest state, so selecting a
+   book never moves anything below it. */
+.shelf-readout {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 48px;
-  row-gap: 6px;
+  margin-top: 18px;
 }
 
-.diet-item {
-  position: relative;
-  padding: 6px 0;
+.shelf-panel {
+  grid-area: 1 / 1;
+  visibility: hidden;
 }
 
-.diet-item:focus-visible {
-  outline: 2px solid var(--mono8);
-  outline-offset: 2px;
-  border-radius: 2px;
+.shelf-panel.is-live {
+  visibility: visible;
 }
 
-.diet-item-title {
-  display: block;
-  font-family: var(--font-essay);
-  font-size: 17px;
-  line-height: 1.45;
-  color: var(--fg);
+.shelf-readout-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: -0.01em;
 }
 
-.diet-item-by {
-  display: block;
-  font-size: 13px;
+.shelf-readout-meta,
+.shelf-hint {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
   color: var(--mono8);
-  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Notes float above the grid on hover/focus (no layout shift);
-   inline on touch devices */
-.diet-item-note {
+.shelf-hint {
+  margin-top: 0;
+}
+
+.shelf-readout-note {
+  margin-top: 8px;
+  max-width: 56ch;
   font-size: 13px;
-  line-height: 1.6;
-  color: var(--mono10);
+  line-height: 1.5;
+  color: var(--mono9);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .diet-item-note {
-    position: absolute;
-    left: 0;
-    top: calc(100% - 2px);
-    z-index: 30;
-    width: max-content;
-    max-width: 38ch;
-    background: var(--bg);
-    border: 1px solid var(--mono3);
-    border-radius: var(--radius);
-    padding: 8px 12px;
-    opacity: 0;
-    transform: translateY(-3px);
-    pointer-events: none;
-    transition: opacity var(--transition), transform var(--transition);
+.shelf-hint-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .shelf-hint-pointer { display: none; }
+  .shelf-hint-touch { display: inline; }
+}
+
+/* Stacked: name, line, contact, then writing and the shelf. Two columns
+   below ~1000px squeeze the shelf out of its column. */
+@media (max-width: 1000px) {
+  .home {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "main"
+      "contact"
+      "side";
+    align-content: start;
+    min-height: 0;
+    padding: 64px 24px 56px;
   }
 
-  .diet-item.has-note:hover .diet-item-note,
-  .diet-item.has-note:focus-visible .diet-item-note,
-  .diet-item.has-note:focus-within .diet-item-note {
-    opacity: 1;
-    transform: none;
+  .home-contact {
+    align-self: start;
+    margin-top: 12px;
+  }
+
+  .home-side {
+    margin-top: 40px;
   }
 }
 
-@media (max-width: 640px) {
-  .diet-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 520px) {
+  .home {
+    padding: 48px 16px 40px;
+  }
+
+  .home h1 {
+    font-size: 30px;
+  }
+
+  .reader-title {
+    font-size: 24px;
   }
 }
 
 @media (max-width: 768px) {
   .essay h1 {
-    font-size: 30px;
+    font-size: 38px;
   }
 
+  /* Below 20px the serif steps up to 400 to stay solid */
   .essay p {
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 400;
   }
+
 }
 
 /* ─── Nested radius inspector ─────────────────────────────────────────────── */

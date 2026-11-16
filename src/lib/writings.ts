@@ -13,7 +13,7 @@ export interface Writing {
   summary?: string;
 }
 
-const SITE_URL = "https://henryallen.dev";
+const SITE_URL = "https://henryallen.me";
 
 /** Per-essay metadata, exported from each essay route's server layout. */
 export function essayMetadata(slug: string): Metadata {
@@ -36,11 +36,11 @@ export function essayMetadata(slug: string): Metadata {
 
 export const writings: Writing[] = [
   {
-    slug: "against-templates",
-    title: "Against Templates",
-    date: "2026-09-04",
+    slug: "an-allergy-to-neuroticism",
+    title: "An Allergy to Neuroticism",
+    date: "2026-11-13",
     summary:
-      "Templates recycle past thinking. The alpha lives in the context they throw away.",
+      "A neurotic environment is one where the anxiety is ambient rather than authored.",
   },
   {
     // TODO(henry): confirm the exact hackathon date (Lovable x Project

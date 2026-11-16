@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader } from "next/font/google";
+import { JetBrains_Mono, Newsreader } from "next/font/google";
 import dynamic from "next/dynamic";
 import { Analytics } from "@vercel/analytics/next";
-import SiteSidebar from "@/components/sidebar/SiteSidebar";
 import "./globals.css";
 
 // Dev-only: keeps dialkit (and its CSS) out of production bundles entirely.
@@ -22,7 +21,15 @@ const RadiusInspector =
 const newsreader = Newsreader({
   subsets: ["latin"],
   style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-newsreader",
+});
+
+// The measuring voice: dates, counts, paths, hints. Two weights only.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-jetbrains-mono",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Henry Allen - AI Engineer",
     description: "Self-taught AI engineer with experience building, deploying, and scaling AI solutions across industries. Founded Europe's fastest startup exit in 20 hours.",
-    url: "https://henryallen.dev",
+    url: "https://henryallen.me",
     siteName: "Henry Allen",
     locale: "en_US",
     type: "website",
@@ -45,6 +52,10 @@ export const metadata: Metadata = {
   },
   authors: [{ name: "Henry Allen" }],
   manifest: "/site.webmanifest",
+  // No visible RSS link on the one-screen home; feed readers find it here.
+  alternates: {
+    types: { "application/rss+xml": "https://henryallen.me/rss.xml" },
+  },
 };
 
 export const viewport: Viewport = {
@@ -52,8 +63,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1c1c1c" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f2ed" },
+    { media: "(prefers-color-scheme: dark)", color: "#121110" },
   ],
 };
 
@@ -63,14 +74,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={newsreader.variable}>
+    <html lang="en" className={`${newsreader.variable} ${jetbrainsMono.variable}`}>
       <head>
         <link rel="icon" href="/halogo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/halogo.svg" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <SiteSidebar />
         {children}
         {RadiusInspector ? <RadiusInspector /> : null}
         {DialKitDock ? <DialKitDock /> : null}

@@ -13,7 +13,7 @@ import {
   IntroItem,
   ScrollFade,
 } from "@/components/reveal/Reveal";
-import { EssayFooter } from "@/components/essay/Essay";
+import { EssayFooter, EssayPath } from "@/components/essay/Essay";
 
 export default function The20hrCoPage() {
   return (
@@ -21,6 +21,7 @@ export default function The20hrCoPage() {
       <article className="essay">
         <header>
           <IntroItem index={0}>
+            <EssayPath />
             {/* TODO(henry): confirm the exact hackathon date */}
             <p className="essay-date">9 August 2025</p>
           </IntroItem>

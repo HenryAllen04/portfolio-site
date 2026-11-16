@@ -18,6 +18,15 @@ import {
 } from "@/components/reveal/Reveal";
 import { writings } from "@/lib/writings";
 
+/** Mono path at the top of an essay; the domain is the way home. */
+export function EssayPath() {
+  return (
+    <p className="essay-path">
+      <Link href="/">henryallen.me</Link> / writing
+    </p>
+  );
+}
+
 /** Closing nav: back to the index plus older/newer neighbours. */
 export function EssayFooter({ slug }: { slug?: string }) {
   const sorted = [...writings].sort((a, b) => b.date.localeCompare(a.date));
@@ -79,6 +88,7 @@ export function Essay({
       <article className="essay">
         <header>
           <IntroItem index={0}>
+            <EssayPath />
             <p className="essay-date">{formatDate(date)}</p>
           </IntroItem>
           <IntroItem index={1} as="h1">

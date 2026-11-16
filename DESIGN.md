@@ -1,16 +1,20 @@
 # Design system
 
-Monochrome editorial site with two voices: Inter for UI chrome, Newsreader
-for anything with a byline. Color is a 12-step grey scale plus one orange
-accent that belongs to the nav dial and nothing else. Motion is fade-up
-reveals from `Reveal.tsx`; if something animates, it goes through there.
+Henry's house style: quiet warm paper (night in dark mode), hairline
+structure, and three type registers. Serif (Newsreader) is for what you
+read, sans (Inter) for what you operate, mono (JetBrains Mono) for what is
+measured. Color is a 12-step warm grey scale plus one Vermilion accent that
+marks the live thing and nothing else. Motion is fade-up reveals from
+`Reveal.tsx`; if something animates, it goes through there. The source of
+truth for the style is the `henry-allen-style` skill. This file is how it
+maps onto this codebase.
 
 ## How styling works here
 
 Plain CSS. Every style is a semantic class in `src/app/globals.css`
-(`.essay-date`, `.diet-grid`), grouped under the banner comments. To style
+(`.essay-date`, `.shelf-spine`), grouped under the banner comments. To style
 something new, add a class there; inline `style` is only for values React
-computes at runtime (the Reveal transforms, sidebar geometry).
+computes at runtime (the Reveal transforms, shelf spine heights).
 
 Tailwind is not installed. Utility classes compile to nothing, and there
 is no `components/ui` folder — the shadcn scaffold was deleted. Don't add
@@ -26,17 +30,31 @@ utility classes, and don't reintroduce shadcn.
 
 ## Color
 
-Tokens in `globals.css` `:root`: `--bg`, `--fg`, `--accent`, `--mono1` …
-`--mono12`. The mono number means distance from the background, not
-lightness: the whole scale flips in dark mode, so `mono3` is always a faint
-line and `mono9` always readable secondary text. Write with tokens and both
-themes work; write a hex value and one theme breaks. No hex, rgb, or named
-colors in components or new CSS.
+Tokens in `globals.css` `:root`: `--bg`, `--fg`, `--accent`,
+`--on-accent`, `--mono1` … `--mono12`. Light is paper `#f4f2ed` on ink
+`#151413`; dark is the night surface (`#121110`, paper text). Every grey sits
+on the same slightly warm axis. A cool neutral grey like `#888` breaks it.
+The mono number means distance from the background, not lightness: the
+whole scale flips in dark mode, so `mono3` is always a hairline and `mono9`
+always readable secondary text. Write with tokens and both themes work;
+write a hex value and one theme breaks. No hex, rgb, or named colors in
+components or new CSS.
 
-`--accent` (orange) marks the current position in the sidebar dial
-(`.sb-active-bar`, `.sb-tick.has-active-label`). That is its whole job. An
-orange link or button anywhere else dilutes the one signal the accent
-carries.
+`--mono8` is deliberately darker than the lab's mute (`#8c887f`, which is
+`--mono7`), so that 12px metadata passes WCAG AA on paper. Use `--mono7` only
+for large text or non-text marks.
+
+`--accent` (Vermilion `#e4471b`) marks state: the thing that is live right
+now. On this site that means exactly these places:
+- the guide on the hovered writing entry (`.reader-item::before`)
+- the underline under the hovered link (`.link-reveal::after`, the hover
+  underline on `.watch-story-link`)
+- the selected book on the shelf (`.shelf-spine.is-selected` top bar)
+- keyboard focus rings and text selection
+
+It is never a ground and never a second hue. Keep it to roughly 3% of
+anything on screen: 1–2px lines, single dots. An accent button or an accent
+link at rest dilutes the one signal it carries.
 
 What do I color this?
 
@@ -49,10 +67,10 @@ Text
 Lines
  ├── Hairline borders and dividers → --mono3
  ├── Homepage section-heading rules → --mono12
- └── Idle dial ticks / drawn divider → --mono4
+ └── Drawn divider → --mono4
 Surfaces
- ├── Page and sidebar → --bg (there are no cards or panels)
- ├── Hover fill (sidebar rows) → --mono2
+ ├── Page → --bg (there are no cards or panels)
+ ├── Recessed step → --mono2 (paper-2)
  └── Inverted tooltip → bg --mono12, text --mono1
 ```
 
@@ -61,35 +79,51 @@ tree, it's a new decision for Henry, not a new hex value.
 
 ## Typography
 
-Three families, assigned by role:
+Three families, three jobs. A reader can tell what a piece of text is for
+before reading it:
 
 ```
-Is it essay copy, a display heading, a pull quote, or an italic aside?
- ├── Yes → --font-essay (Newsreader; loaded variable via next/font)
+Is it something you read (essay copy, a heading, a name, the bio, a quote)?
+ ├── Yes → --font-serif / --font-essay (Newsreader, variable via next/font)
  └── No
-      ├── Is it a page h1 or prose h2 outside the essay/home systems?
-      │    └── Yes → --font-sans (Söhne)
-      └── Everything else (labels, dates, nav, footer) → --font-ui (Inter)
+      ├── Is it something you press or operate (nav, links, labels)?
+      │    └── Yes → --font-ui (Inter; weight 500 for anything pressable)
+      └── Is it a measurement (date, year, count, index number, path, hint)?
+           └── Yes → --font-mono (JetBrains Mono, 400)
 ```
+
+Söhne is no longer in the system. The local file is a static 400 cut, and
+with `font-synthesis: none` it can't carry a 400/500 distinction. Inter is
+the operating sans; `--font-sans` is an alias for it.
 
 `em` inside body copy switches to the serif automatically (global rule);
-that is the house move for emphasis in ledes and bios. Use `em`, not a
-font-family override.
+that is the house move for emphasis in ledes. Use `em`, not a font-family
+override.
 
-Sizes come from the classes, not ad hoc: essay/home h1 36px, section
-display headings 24–26px, essay body 18px, UI body 15px, secondary 13–14px,
-metadata 12px. Homepage section labels are 14px uppercase; 11px otherwise
-exists only for uppercase eyebrow labels with `0.1em` tracking (`h2` base
-style, `.essay-date`). Never set text below 11px.
-Dates and years get `font-variant-numeric: tabular-nums` so lists don't
-wobble.
+Newsreader is light at size: weight 300 at 20px and above, 400 below that.
+Tracking tightens (−0.02em) only at display sizes; mono and labels stay at 0
+or positive.
+
+Sizes come from the classes, not ad hoc:
+- **Display:** home h1 `clamp(40px, 4.6vw, 64px)`; essay h1 `clamp(40px, 5.4vw, 60px)`.
+- **Headings:** essay section headings 30px; home name 34px.
+- **Reading:** essay body 20px/1.6 (18px/400 under 768px); bio 22px.
+- **Sans:** UI body 15px; secondary 13–14px.
+- **Mono metadata:** 12px, UPPERCASE with `0.04em` for kickers (the bare `h2` style, `.essay-date`); lowercase for paths, dates and hints (`henryallen.me / writing`, `hover a spine to read`).
+- **Floor:** never set text below 11px.
+
+Dates, years and counts get `font-variant-numeric: tabular-nums` so lists
+don't wobble.
 
 ## Spacing, radius, borders
 
 Spacing steps: `--gap-s` 8, `--gap` 16, `--gap-2x` 32, `--gap-4x` 64,
-`--gap-8x` 128. Radii: `--radius` 6 for small surfaces (tooltips, notes),
-`--radius-l` 12 for media. Borders are always 1px `--mono3`; there are no
-shadows anywhere on the site, so don't introduce one.
+`--gap-8x` 128. Corners are square everywhere: `--radius` and `--radius-l`
+are both 0 and exist only so older rules still resolve. The only curves are
+functional ones, like rings and dots. Borders are 1px `--mono3` hairlines.
+Solid lines mean structure; a dashed line means something absent or not yet
+there. There are no shadows anywhere on the site, so don't introduce one.
+Depth comes from layering `--bg` over `--mono2`.
 
 ## Motion
 
@@ -103,17 +137,20 @@ What kind of entrance?
  │    (count = highest index + 1; index order = reveal order)
  ├── Below the fold → <ScrollFade> (stagger lists with delay={i * 80})
  ├── Section separator → <AnimatedDivider />
- └── Hover/press feedback → CSS transition using --transition (200ms)
-      or --transition-med (320ms)
+ └── Hover/press feedback → CSS transition using --transition (150ms,
+      colour/state) or --transition-med (300ms, physical moves). Both use
+      --ease, cubic-bezier(.2,.7,.2,1). Nothing overshoots.
 ```
 
 Never wrap the same element in both `IntroItem` and `ScrollFade`; the
-intro gate already holds scroll reveals until it finishes. `motion/react`
-appears once, inside the sidebar; don't reach for it in new work.
+intro gate already holds scroll reveals until it finishes. Don't reach
+for `motion/react` in new work.
 
-Inline text links over copy use `.link-reveal` (underline draws in on
-hover). Quiet nav links (`.essay-back`, `.op-footer a`) go `--mono8` →
-`--fg` on hover. Bare `<a>` falls back to the global opacity fade, which
+Inline text links over copy use `.link-reveal` (an accent underline draws
+in on hover). Quiet nav links (`.essay-back`, `.home-links a`) go `--mono8` →
+`--fg` on hover. In the writing list (`.reader`), hovering one row
+dims its siblings to `--mono7`: the cursor decides what is lit. This is
+hover-only, so touch and keyboard keep the full-contrast resting state. Bare `<a>` falls back to the global opacity fade, which
 is fine for list rows but too subtle inside a paragraph.
 
 ## Components
@@ -124,32 +161,47 @@ is fine for list rows but too subtle inside a paragraph.
   missing. A custom layout (see `the20hr-co`) is allowed, but it still
   builds on the Reveal primitives and still needs the registry entry and
   `layout.tsx` metadata (steps in CLAUDE.md).
-- **SiteSidebar** — a singleton mounted in `layout.tsx`. It reads
-  `writings.ts` and `diet.ts` on its own; never mount a second one and
-  never hand it props. New home-page sections need an `id` that matches a
-  `SECTIONS` entry in `SiteSidebar.tsx` or the dial won't track them, and
-  Writings/Diet are pinned to `SECTIONS` indices 1 and 2 in four places
-  (`setExpanded(1)`, `main === 1`, `main === 2`, `1 * STOPS_PER_GAP`), so
-  inserting a section before them means updating those indices too.
-- **Art** — two pieces, both in `src/components/art/`, decided from a
-  prototype round on 2026-09-08. `GlassBox` is the site mark: a hairline
-  wireframe cube with a smaller box inside (the "storage unit designed to
-  be a glass box" line, drawn). It sits to the right of the name inside
-  the first `IntroItem` (`.home-title`), draws in once on first visit, and
-  its yaw follows scroll and pointer. `TickRule` is the home-page section
-  divider: the dial's ticks laid flat, drawing in through `useScrollReveal`
-  and leaning toward the cursor. Essays keep `AnimatedDivider`. Rejected in
-  the same round: a large ghosted Newsreader glyph behind the hero, a
-  data-driven "ledger" punch card of the diet (pretty, purposeless), the
-  cube as list bullets (reads as icon clutter at 22px), the cube as a large
-  set piece beside the hero, and an orange-tinted inner box (steals the
-  dial's one colour). Colour stays monochrome.
-- **Page shells** — home content in `.one-page` with `.op-section` blocks;
-  essays in `.essay`. Both cap at `--content-width` (720px). Don't invent
-  a third shell for a new page; pick the one it reads most like.
+- **Art** — `src/components/art/TickRule.tsx` (the old dial's ticks laid
+  flat, leaning toward the cursor) is currently unused; it was removed from
+  the one-screen home on 2026-11-16. Essays keep `AnimatedDivider`. The
+  `GlassBox` cube mark and the sidebar dial were deleted the same day at
+  Henry's request. Rejected in the 2026-09-08 art round: a large ghosted
+  Newsreader glyph behind the hero, and a data-driven "ledger" punch card
+  of the diet (pretty, purposeless). The art stays monochrome.
+- **Home** — one screen (no scroll at 1024×768 and up), and it carries
+  five things only: name, one line, essay titles, the shelf, contact. The
+  composition is the message, so the name is small (34px) and nothing is
+  labelled. `.home` is a grid:
+  - **Top-left (`.home-main`):** name and the one line.
+  - **Bottom-left (`.home-contact`):** contact links, aligned to the
+    bottom of the shelf.
+  - **Right (`.home-side`):** the writing titles (`.reader`), then the
+    shelf (`.home-shelf`).
+  - **Below 1000px** it stacks: name, line, contact, writing, shelf.
+  - Anything new has to earn a place against those five.
+- **Reader** — `.reader` is a line reader of essay titles and dates.
+  Hovering dims the other titles and snaps a 2px accent guide (140ms
+  ease-out) to the hovered entry's edge; the guide hangs in the column gap
+  so titles align with the shelf.
+- **BookShelf** — `src/components/shelf/BookShelf.tsx` (lab tile 13), fed by
+  `books` in `src/lib/diet.ts`.
+  - **Drawing:** upright hairline spines on a ground line, grouped by year
+    newest first, with mono year labels underneath. Spine height follows
+    title length.
+  - **Mouse:** hover previews a book; leaving the shelf returns it to rest.
+    A click pins the selection.
+  - **Touch:** press or drag along the shelf; the spine nearest the finger
+    is selected, so the narrow spine is never the tap target.
+  - **Keyboard:** a radio group with one tab stop; arrows and Home/End
+    move, Escape resets.
+  - **Readout:** every state is stacked in one grid cell, so its height is
+    always the tallest entry and selecting never moves the page. At rest it
+    shows only the hint.
+- **Page shells** — home in `.home`; essays in `.essay` (capped at
+  `--content-width`, 720px). Don't invent a third shell for a new page;
+  pick the one it reads most like.
 - **Legacy** — `Footer`/`Clock` (only `/book` uses them),
-  `BackNavigation`, `ExternalLinkIcon`. Don't use them in new work; the
-  home footer pattern is `.op-footer`.
+  `BackNavigation`, `ExternalLinkIcon`. Don't use them in new work.
 
 Placeholder copy Henry hasn't written yet gets the `.draft-copy` class
 (renders blue in both themes, the one sanctioned non-mono color) plus a
@@ -157,12 +209,12 @@ Placeholder copy Henry hasn't written yet gets the `.draft-copy` class
 
 There are no Button, Card, Input, or Badge components in this system, and
 the site has no forms. A new interactive element is a `<button>` or `<a>`
-styled by a new semantic class, following the sidebar's classes as the
-reference.
+styled by a new semantic class, following `.shelf-spine` and
+`.reader-item` as the reference.
 
 ```tsx
 // Correct — the house essay shape
-<Essay title="Against Templates" date="2026-09-04" slug="against-templates">
+<Essay title="An Allergy to Neuroticism" date="2026-11-13" slug="an-allergy-to-neuroticism">
   <EssaySection number="01" title="What a template optimises for">
     <p>…</p>
   </EssaySection>

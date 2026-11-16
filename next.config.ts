@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
     return [
       // The writings index lives on the one-page home
       { source: "/writing", destination: "/#writings", permanent: false },
+      // Removed 2026-11-16; shared links land on the home page
+      {
+        source: "/writing/against-templates",
+        destination: "/",
+        permanent: false,
+      },
       // Old experience-page URL now lives in the essay system
       {
         source: "/the20hr-co",
