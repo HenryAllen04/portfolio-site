@@ -426,19 +426,23 @@ footer .footer-right {
 /* ─── Home: one screen ── */
 /* The composition is the message. Five things: name, one line, essay
    titles, the shelf, contact. Name and line sit top-left, contact
-   bottom-left, writing and the shelf fill the right. Sized for one
+   bottom-left, writing and the shelf fill the right, the whole
+   composition anchored to the top of the screen. Sized for one
    desktop screen (~1280×800); shorter viewports scroll. Anything new
    has to earn a place against that list. */
 .home {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-  /* Content-sized rows: the right column sets the height, the name sits
-     with the writing column's top line a few px under it and the contact links level with its bottom. */
+  /* Content-sized rows. The name and line get a row to themselves, so no
+     essay shares a line with them (Henry, 2026-11-16): the writing column
+     starts just under the line, and the contact links sit level with the
+     shelf's bottom. */
   grid-template-rows: auto auto;
   grid-template-areas:
-    "main side"
+    "main ."
     "contact side";
-  align-content: center;
+  /* Anchored to the top, not centred (Henry, 2026-11-16) */
+  align-content: start;
   column-gap: 96px;
   max-width: 1180px;
   min-height: 100vh;
@@ -447,11 +451,8 @@ footer .footer-right {
   padding: 72px 40px 56px;
 }
 
-/* The name stands above the writing column; its top line starts a few
-   px under the name (Henry, 2026-11-16). 34px name, so 6px clear. */
 .home-main {
   grid-area: main;
-  margin-top: -40px;
 }
 
 /* Bottom-aligned with the shelf, so the columns frame each other */
@@ -463,6 +464,7 @@ footer .footer-right {
 .home-side {
   grid-area: side;
   min-width: 0;
+  margin-top: 24px;
 }
 
 /* The name is small: the composition carries the page, not the type */
@@ -1216,10 +1218,6 @@ footer .footer-right {
     align-content: start;
     min-height: 0;
     padding: 64px 24px 56px;
-  }
-
-  .home-main {
-    margin-top: 0;
   }
 
   /* Room under the line for the ruler's arrows and a wrapped readout */

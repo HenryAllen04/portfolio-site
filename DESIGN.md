@@ -172,8 +172,9 @@ is fine for list rows but too subtle inside a paragraph.
   five things only: name, one line, essay titles, the shelf, contact. The
   composition is the message, so the name is small (34px) and nothing is
   labelled. `.home` is a grid:
-  - **Top-left (`.home-main`):** name and the one line, raised on desktop so
-    the writing column's top line starts a few px under the name.
+  - **Top-left (`.home-main`):** name and the one line, in a row of their
+    own: the writing column starts 24px under the line, so no essay title
+    shares a line with them.
   - **Bottom-left (`.home-contact`):** contact links, aligned to the
     bottom of the shelf.
   - **Right (`.home-side`):** the writing titles (`.reader`), then the
