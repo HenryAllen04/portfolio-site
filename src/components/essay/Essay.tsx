@@ -22,7 +22,7 @@ import { writings } from "@/lib/writings";
 export function EssayPath() {
   return (
     <p className="essay-path">
-      <Link href="/">henryallen.me</Link> / writing
+      <Link href="/">HenryAllen.me</Link> / writing
     </p>
   );
 }

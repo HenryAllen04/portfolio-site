@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <main className="essay">
       <p className="essay-path">
-        <Link href="/">henryallen.me</Link> / 404
+        <Link href="/">HenryAllen.me</Link> / 404
       </p>
       <h1>Nothing here.</h1>
     </main>

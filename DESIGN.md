@@ -109,7 +109,7 @@ Sizes come from the classes, not ad hoc:
 - **Headings:** essay section headings 30px; home name 34px.
 - **Reading:** essay body 20px/1.6 (18px/400 under 768px); bio 22px.
 - **Sans:** UI body 15px; secondary 13–14px.
-- **Mono metadata:** 12px, UPPERCASE with `0.04em` for kickers (the bare `h2` style, `.essay-date`); lowercase for paths, dates and hints (`henryallen.me / writing`, `hover a spine to read`).
+- **Mono metadata:** 12px, UPPERCASE with `0.04em` for kickers (the bare `h2` style, `.essay-date`); lowercase for dates and hints, as written for paths (`HenryAllen.me / writing`, `hover a spine to read`).
 - **Floor:** never set text below 11px.
 
 Dates, years and counts get `font-variant-numeric: tabular-nums` so lists

@@ -3,7 +3,7 @@
 One-screen personal site that proves taste to someone doing due diligence
 (usually an investor). Home carries five things only: name, one line, essay
 titles, the book shelf, contact. No site navigation beyond that; essays
-link home through their `henryallen.me / writing` path. Next.js 15 App
+link home through their `HenryAllen.me / writing` path. Next.js 15 App
 Router, plain CSS in
 `src/app/globals.css` (Tailwind is NOT wired up — don't add utility
 classes). Styled in Henry's house style (the `henry-allen-style` skill):
