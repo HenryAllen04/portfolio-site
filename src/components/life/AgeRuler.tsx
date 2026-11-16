@@ -15,8 +15,9 @@
  * (Escape, click outside, or click the ruler again).
  *
  * The ends push back: scrub or step past now (or birth) and the strip
- * leans a month or two against the edge and settles; past now the readout
- * says "not yet". Resistance, not a bounce.
+ * leans a month or two against the edge and settles. Dragged past now the
+ * readout says "not yet"; the → step at now only leans and keeps its label.
+ * Resistance, not a bounce.
  *
  * The page is prerendered, so the date is read on the client after mount;
  * until then the box is reserved at its final size (no layout shift).
@@ -56,8 +57,8 @@ function writeReadout(el: HTMLElement | null, text: string) {
   const label = document.createElement("span");
   label.className = "ruler-label";
   const rest = text.slice(at > -1 ? at + 3 : 0);
-  // Split into sentences if there are any ("AI engineer. | No thank you,
-  // university"); otherwise at commas ("first company, | school on…")
+  // Split into sentences if there are any ("rejected by the Army: |
+  // ADHD"); otherwise at commas ("first company, | school on…")
   rest
     .split(/[.:] /.test(rest) ? /(?<=[.:]) / : /(?<=,) /)
     .forEach((phrase, i) => {
@@ -111,7 +112,6 @@ export function AgeRuler() {
   const p = useRef(0); // months scrolled back from now, clamped
   const raw = useRef(0); // the same, unclamped (what drags and tweens move)
   const raf = useRef(0);
-  const hold = useRef(0); // timer keeping "not yet" readable
   const earlier = useRef<HTMLButtonElement>(null);
   const later = useRef<HTMLButtonElement>(null);
   const press = useRef<{ x: number; p: number; dragged: boolean } | null>(
@@ -136,7 +136,7 @@ export function AgeRuler() {
   );
 
   const draw = useCallback(
-    (months: number) => {
+    (months: number, notYet = true) => {
       raw.current = months;
       p.current = Math.max(0, Math.min(max, months));
       const over = months - p.current;
@@ -144,7 +144,10 @@ export function AgeRuler() {
       // Put month (now − shown) under the centre hairline
       const x = CENTER - 0.5 - (nowMonth - shown) * PX_PER_MONTH;
       strip.current?.setAttribute("transform", `translate(${x} 0)`);
-      writeReadout(readout.current, over < -0.5 ? NOT_YET : label(p.current));
+      writeReadout(
+        readout.current,
+        notYet && over < -0.5 ? NOT_YET : label(p.current),
+      );
       earlier.current?.classList.toggle("is-limit", p.current >= max);
       later.current?.classList.toggle("is-limit", p.current <= 0);
     },
@@ -154,10 +157,7 @@ export function AgeRuler() {
   const setScrubbing = (on: boolean) =>
     wrap.current?.classList.toggle("is-scrubbing", on);
 
-  const stop = () => {
-    cancelAnimationFrame(raf.current);
-    clearTimeout(hold.current);
-  };
+  const stop = () => cancelAnimationFrame(raf.current);
 
   const tween = useCallback(
     (to: number, ms: number, done?: () => void) => {
@@ -192,24 +192,17 @@ export function AgeRuler() {
     const edge = p.current;
     const dur = reducedMotion() ? 0 : 320;
     const t0 = performance.now();
-    const pastNow = dir === -1;
-    const settle = () => {
-      draw(edge);
-      if (!pastNow) return announce();
-      writeReadout(readout.current, NOT_YET);
-      announce(NOT_YET);
-      hold.current = window.setTimeout(() => {
-        draw(p.current);
-        if (!openRef.current) setScrubbing(false);
-      }, 1100);
-    };
+    // The label holds through the lean: at now it stays "now · …"
     const frame = (t: number) => {
       const k = dur === 0 ? 1 : Math.min(1, (t - t0) / dur);
-      draw(edge + dir * LEAN * Math.sin(Math.PI * k));
+      draw(edge + dir * LEAN * Math.sin(Math.PI * k), false);
       if (k < 1) raf.current = requestAnimationFrame(frame);
-      else settle();
+      else {
+        draw(edge);
+        announce();
+        if (edge === 0 && !openRef.current) setScrubbing(false);
+      }
     };
-    if (pastNow) writeReadout(readout.current, NOT_YET);
     raf.current = requestAnimationFrame(frame);
   };
 
