@@ -433,7 +433,7 @@ footer .footer-right {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
   /* Content-sized rows: the right column sets the height, the name sits
-     level with its top and the contact links level with its bottom. */
+     48px above its top and the contact links level with its bottom. */
   grid-template-rows: auto auto;
   grid-template-areas:
     "main side"
@@ -447,8 +447,11 @@ footer .footer-right {
   padding: 72px 40px 56px;
 }
 
+/* The name stands a step above the writing column's top line (Henry,
+   2026-11-16) */
 .home-main {
   grid-area: main;
+  margin-top: -48px;
 }
 
 /* Bottom-aligned with the shelf, so the columns frame each other */
@@ -1213,6 +1216,10 @@ footer .footer-right {
     align-content: start;
     min-height: 0;
     padding: 64px 24px 56px;
+  }
+
+  .home-main {
+    margin-top: 0;
   }
 
   /* Room under the line for the ruler's arrows and a wrapped readout */
