@@ -28,7 +28,7 @@ export const MILESTONES: Record<number, string> = {
   14: "became an Army cadet",
   16: "rejected by the Army: ADHD",
   17: "first company, school on the side",
-  18: "No thank you, university",
+  18: "didnt go university",
   19: "AI engineer, travelling the world",
   20: "The20hr.co, winning hacks in London",
   21: "founder, judged TreeHacks",
