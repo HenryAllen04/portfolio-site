@@ -179,6 +179,47 @@ is fine for list rows but too subtle inside a paragraph.
     shelf (`.home-shelf`).
   - **Below 1000px** it stacks: name, line, contact, writing, shelf.
   - Anything new has to earn a place against those five.
+- **AgeRuler** — `src/components/life/AgeRuler.tsx`, the mark after
+  "22, English", fed by `src/lib/life.ts` (birthday, milestones, the "now"
+  label). It's a 49×12 hairline ruler: a strip of every month since birth
+  slides under a fixed accent hairline in the centre, like a slide-rule
+  cursor, and the month under the hairline is the one being read.
+  - **Ticks:** uniform months, with lived months in ink and future months
+    faint. There are no year or milestone ticks; Henry found taller "event"
+    ticks misleading, so milestones appear only in the readout.
+  - **Rest / hover:** the readout shows "now · founder". The cursor is a
+    plain pointer, not a drag cursor.
+  - **The secret (drag):** drag it like film; 1px = 1 month with no
+    easing. Release eases home in 350ms.
+  - **Click:** opens ← → year controls centred under the ruler, each a 44px
+    column, placed absolutely so nothing moves. While they're open, the
+    arrow keys work page-wide and the ruler stays put. Escape, clicking
+    outside, or clicking the ruler again closes them and eases home.
+  - **Ends push back:** stepping or dragging past now or birth leans the
+    strip up to 3 months against the edge (a rubber band, no overshoot back)
+    and settles. Past now the readout says "not yet" for about a second.
+    The arrow that would run off an end is drawn faint but still answers.
+  - **Readout:** mono, its first line on the intro's baseline. "19 ·"
+    holds a column and the label wraps beside it (hanging indent), so a
+    wrapped line clears the → arrow. Lines break between phrases first:
+    at sentences if the label has any, otherwise at commas. Width is 44ch
+    where there's room (≥1200px, or stacked), 34ch in the narrow
+    two-column range, and to the screen edge on phones. Keep milestones to
+    about 30 characters. When stacked, contact sits 56px under the line to
+    leave room for the arrows and a wrapped readout.
+  - **No focus box** (Henry's call): keyboard focus shows the readout and
+    darkens the axis; focused arrows go ink with an accent underline.
+  - **Keyboard:** ←/→ step a year, Enter opens the controls, Escape returns
+    to now. Screen readers hear each age, and "not yet" at the end.
+  - The date is read on the client (the page is prerendered); frames write
+    the transform directly, with no React render per frame.
+  - **Decided 2026-11-16 in a prototype round, with these rejections:**
+    - Hatched St George's cross: the hatching collapses into a grid below
+      ~24px.
+    - England locator: the coastline wobbles at 15px.
+    - Rewind (press and hold): undiscoverable, and you can't stop on a year.
+    - Reel (click plays birth to now): a performance rather than a tool;
+      repeat visitors get the same show.
 - **Reader** — `.reader` is a line reader of essay titles and dates.
   Hovering dims the other titles and snaps a 2px accent guide (140ms
   ease-out) to the hovered entry's edge; the guide hangs in the column gap
@@ -186,7 +227,8 @@ is fine for list rows but too subtle inside a paragraph.
 - **BookShelf** — `src/components/shelf/BookShelf.tsx` (lab tile 13), fed by
   `books` in `src/lib/diet.ts`.
   - **Drawing:** upright hairline spines on a ground line, grouped by year
-    newest first, with mono year labels underneath. Spine height follows
+    newest first, separated by a gap with no year labels (the year shows in
+    the readout). Spine height follows
     title length.
   - **Mouse:** hover previews a book; leaving the shelf returns it to rest.
     A click pins the selection.

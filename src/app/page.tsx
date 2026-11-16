@@ -9,6 +9,7 @@
 import Link from "next/link";
 import { Intro, IntroItem } from "@/components/reveal/Reveal";
 import { BookShelf } from "@/components/shelf/BookShelf";
+import { AgeRuler } from "@/components/life/AgeRuler";
 import { writings } from "@/lib/writings";
 import { books } from "@/lib/diet";
 
@@ -36,7 +37,10 @@ export default function Home() {
       <Intro storageKey="home-intro" count={3}>
         <IntroItem index={0} className="home-main">
           <h1>Henry Allen</h1>
-          <p className="home-intro">22, English</p>
+          <p className="home-intro">
+            22, English
+            <AgeRuler />
+          </p>
         </IntroItem>
 
         <IntroItem index={1} as="nav" className="home-contact">

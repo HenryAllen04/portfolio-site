@@ -48,6 +48,12 @@ Append to `books` in `src/lib/diet.ts` (`title`, `by`, `year`, optional
 Henry has read: podcasts and courses were removed because, beside his
 writing, they read as his own work.
 
+### Age ruler
+Birthday, milestones and the resting "now · …" label live in
+`src/lib/life.ts`. Add a milestone as `age: "label"` (about 30 characters
+max, so it fits one line); it shows in the
+ruler's readout as that year scrolls past.
+
 ### Home copy
 The line under the name ("22, English") is Henry's. Don't add a bio,
 summaries or labels back: Henry chose the five-item page on 2026-11-16.

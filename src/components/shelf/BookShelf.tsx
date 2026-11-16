@@ -2,8 +2,8 @@
 
 /**
  * Upright book shelf (lab tile 13). One plain hairline object holding real
- * data: each book is a spine standing on a ground line, grouped by year,
- * newest first. The live book lifts and takes the accent bar; nothing else
+ * data: each book is a spine standing on a ground line, grouped by year
+ * (unlabelled; a gap separates the groups), newest first. The live book lifts and takes the accent bar; nothing else
  * on the shelf is accented.
  *
  * Mouse: hovering previews a book; leaving the shelf returns it to rest.
@@ -132,7 +132,6 @@ export function BookShelf({ books }: { books: Book[] }) {
                 </button>
               ))}
             </div>
-            <span className="shelf-year">{g.year}</span>
           </div>
         ))}
       </div>

@@ -480,6 +480,182 @@ footer .footer-right {
   color: var(--mono9);
 }
 
+/* The age ruler rides the intro line's baseline */
+.home-intro {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* ─── Age ruler (AgeRuler) ── */
+.ruler {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.ruler-mark {
+  position: relative;
+  display: inline-flex;
+  width: 49px;
+  height: 12px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  /* A small drag handle: claim the gesture, no selection or iOS callout */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* No focus box (Henry, 2026-11-16): keyboard focus shows the readout
+   and darkens the axis instead */
+.ruler-mark:focus-visible { outline: none; }
+.ruler-mark:focus-visible .ruler-axis { stroke: var(--fg); }
+
+/* ≥44px hit area without moving the line */
+.ruler-mark::after {
+  content: "";
+  position: absolute;
+  inset: -16px -8px;
+}
+
+.ruler-svg {
+  display: block;
+  overflow: hidden;
+  shape-rendering: crispEdges;
+}
+
+.ruler-axis,
+.ruler-tick { stroke: var(--mono5); stroke-width: 1; }
+.ruler-tick.is-past { stroke: var(--mono9); }
+.ruler-now { stroke: var(--accent); stroke-width: 1; }
+
+/* Under the ruler, centred; absolutely placed so opening moves nothing */
+.ruler-controls {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  display: flex;
+  transform: translateX(-50%);
+  animation: ruler-controls-in 150ms var(--ease) both;
+}
+
+@keyframes ruler-controls-in {
+  from { opacity: 0; }
+}
+
+/* Each arrow is a full 44px column, so hit areas never overlap */
+.ruler-step {
+  position: relative;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+  color: var(--mono8);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.ruler-step:hover {
+  color: var(--fg);
+}
+
+/* Same no-box rule as the ruler: focus is ink plus an accent underline */
+.ruler-step:focus-visible {
+  outline: none;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+}
+
+/* The arrow that would run off an end: faint, but still answers (the
+   ruler leans and says "not yet") */
+.ruler-step.is-limit { color: var(--mono5); }
+
+/* ...and 44px tall */
+.ruler-step::after {
+  content: "";
+  position: absolute;
+  inset: -16px 0;
+}
+
+.ruler-readout {
+  position: absolute;
+  left: calc(100% + 10px);
+  /* top: 0 puts the first line on the intro's baseline (measured); a long
+     milestone wraps downward into the space under the line, never
+     sideways into the writing */
+  top: 0;
+  display: flex;
+  width: max-content;
+  max-width: 34ch;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--mono8);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+
+/* "19 · " holds its column; the label wraps beside it (hanging indent).
+   Phrases are inline blocks, so lines break between them first and inside
+   one only when a phrase is wider than the line (phones) */
+.ruler-age {
+  flex: none;
+  white-space: pre;
+}
+
+.ruler-label {
+  min-width: 0;
+}
+
+.ruler-phrase {
+  display: inline-block;
+}
+
+.ruler-mark:focus-visible ~ .ruler-readout,
+.ruler.is-open .ruler-readout,
+.ruler.is-scrubbing .ruler-readout {
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+/* Wider where there's room: one line for any milestone up to ~38
+   characters. Two columns need ≥1200px for that to clear the writing
+   column; stacked, nothing sits to the right. */
+@media (min-width: 1200px), (max-width: 1000px) {
+  .ruler-readout { max-width: 44ch; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Delayed, so cursor travel past the line doesn't flash it */
+  .ruler-mark:hover ~ .ruler-readout {
+    opacity: 1;
+    transition-delay: 200ms;
+  }
+}
+
+.ruler-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .home-shelf {
   margin-top: 56px;
   scroll-margin-top: 48px;
@@ -967,15 +1143,6 @@ footer .footer-right {
   box-shadow: inset 0 max(3px, 0.8cqw) 0 var(--accent);
 }
 
-.shelf-year {
-  margin-top: max(6px, 1.6cqw);
-  font-family: var(--font-mono);
-  font-size: max(11px, 2cqw);
-  line-height: 1;
-  color: var(--mono8);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
 
 /* Every readout state sits in one grid cell; only the live one is
    visible. The cell is as tall as the tallest state, so selecting a
@@ -1048,9 +1215,10 @@ footer .footer-right {
     padding: 64px 24px 56px;
   }
 
+  /* Room under the line for the ruler's arrows and a wrapped readout */
   .home-contact {
     align-self: start;
-    margin-top: 12px;
+    margin-top: 56px;
   }
 
   .home-side {
@@ -1061,6 +1229,11 @@ footer .footer-right {
 @media (max-width: 520px) {
   .home {
     padding: 48px 16px 40px;
+  }
+
+  /* Phone: wrap the readout before the screen edge (it starts ~180px in) */
+  .ruler-readout {
+    max-width: calc(100vw - 188px);
   }
 
   .home h1 {
